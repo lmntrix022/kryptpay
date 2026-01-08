@@ -131,7 +131,11 @@ databases:
   - name: kryptpay-db
     databaseName: kryptpay
     user: kryptpay
-    plan: starter
+    plan: free  # Nouveau plan gratuit (remplace 'starter' legacy)
+    # Note: Le plan 'free' est gratuit avec limitations:
+    # - 90 jours de rétention automatique
+    # - Limité en stockage et connexions
+    # Pour la production, considérez un plan payant (standard, pro)
 
 # Redis (optional - you can use Upstash Redis or Redis Cloud instead)
 # Uncomment if you want to use Render's Redis service
