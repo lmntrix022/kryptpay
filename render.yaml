@@ -16,11 +16,14 @@ services:
         fromDatabase:
           name: kryptpay-db
           property: connectionString
+      # Redis Configuration
+      # Use Upstash Redis (recommended - free tier available)
+      # Get connection URL from https://upstash.com and set REDIS_URL manually in Render dashboard
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: kryptpay-redis
-          property: connectionString
+        sync: false
+        # Set this manually in Render dashboard after creating Upstash Redis:
+        # Format: redis://default:PASSWORD@HOST:6379
+        # Or use separate variables: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
       # JWT & Auth
       - key: JWT_SECRET
         generateValue: true
