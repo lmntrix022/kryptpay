@@ -1,0 +1,655 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model api_key_audit {
+  id          String            @id
+  api_key_id  String
+  action      ApiKeyAuditAction
+  ip_address  String?
+  user_agent  String?
+  occurred_at DateTime          @default(now())
+  api_keys    ApiKey            @relation("ApiKeyAudit", fields: [api_key_id], references: [id], onDelete: Cascade)
+
+  @@index([api_key_id, occurred_at])
+}
+
+model ApiKey {
+  id           String          @id @map("id")
+  label        String?         @map("label")
+  keyHash      String          @unique @map("key_hash")
+  merchantId   String          @map("merchant_id")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  lastUsedAt   DateTime?       @map("last_used_at")
+  revokedAt    DateTime?       @map("revoked_at")
+  status       ApiKeyStatus    @default(ACTIVE) @map("status")
+  apiKeyAudit  api_key_audit[] @relation("ApiKeyAudit")
+  merchant     merchants       @relation("MerchantApiKeys", fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@map("api_keys")
+}
+
+model dunning_attempts {
+  id              String        @id
+  subscription_id String
+  payment_id      String?
+  attempt_number  Int
+  status          String
+  error_message   String?
+  next_retry_at   DateTime?
+  created_at      DateTime      @default(now())
+  subscriptions   subscriptions @relation(fields: [subscription_id], references: [id], onDelete: Cascade)
+
+  @@index([subscription_id, created_at])
+}
+
+model merchant_balances {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  merchant_id     String
+  currency        String
+  balance         BigInt?   @default(0)
+  pending_balance BigInt?   @default(0)
+  last_updated    DateTime? @default(now()) @db.Timestamptz(6)
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@unique([merchant_id, currency])
+  @@index([merchant_id], map: "idx_merchant_balances_merchant")
+}
+
+model merchant_notification_preferences {
+  id                     String    @id
+  merchant_id            String    @unique
+  payment_notifications  Boolean   @default(true)
+  payout_notifications   Boolean   @default(true)
+  refund_notifications   Boolean   @default(true)
+  system_notifications   Boolean   @default(true)
+  customer_notifications Boolean   @default(true)
+  email_enabled          Boolean   @default(true)
+  sms_enabled            Boolean   @default(false)
+  push_enabled           Boolean   @default(false)
+  created_at             DateTime  @default(now())
+  updated_at             DateTime
+  merchants              merchants @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+}
+
+model merchant_vat_settings {
+  id                        String    @id
+  merchant_id               String    @unique
+  enabled                   Boolean   @default(false)
+  seller_country            String    @db.Char(2)
+  auto_detect_buyer_country Boolean   @default(true)
+  default_tax_behavior      String
+  auto_reversement          Boolean   @default(false)
+  reversement_account       String?
+  default_rates             Json?
+  created_at                DateTime  @default(now())
+  updated_at                DateTime
+  merchants                 merchants @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+}
+
+model Merchant {
+  id                                String                             @id
+  name                              String?
+  createdAt                         DateTime                           @default(now()) @map("created_at")
+  updatedAt                         DateTime                           @map("updated_at")
+  webhookSecret                     String?                            @map("webhook_secret")
+  webhookUrl                        String?                            @map("webhook_url")
+  appCommissionRate                 Float?                             @default(0) @map("app_commission_rate")
+  appCommissionFixed                Int?                               @default(0) @map("app_commission_fixed")
+  apiKeys                           ApiKey[]                           @relation("MerchantApiKeys")
+  merchantNotificationPreferences   merchant_notification_preferences?
+  merchantVatSettings               merchant_vat_settings?
+  notificationHistory               notification_history[]
+  payouts                           payouts[]
+  providerCredentials               provider_credentials[]
+  refunds                           refunds[]
+  sandboxWebhookLogs                sandbox_webhook_logs[]
+  savedFilters                      saved_filters[]
+  subscriptions                     subscriptions[]
+  transactions                      transactions[]
+  users                             User[]
+  vatTransactions                   vat_transactions[]
+  webhookDeliveries                 WebhookDelivery[]
+  
+  @@map("merchants")
+}
+
+model notification_history {
+  id            String              @id
+  merchant_id   String?
+  type          NotificationType
+  channel       NotificationChannel
+  status        NotificationStatus  @default(PENDING)
+  recipient     String
+  subject       String?
+  body          String?
+  metadata      Json?
+  error_message String?
+  sent_at       DateTime?
+  created_at    DateTime            @default(now())
+  merchants     merchants?          @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+
+  @@index([merchant_id, created_at])
+  @@index([recipient])
+  @@index([type, status])
+}
+
+model password_reset_tokens {
+  id          String    @id
+  token_hash  String    @unique
+  user_id     String
+  created_at  DateTime  @default(now())
+  expires_at  DateTime
+  consumed_at DateTime?
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model payout_events {
+  id          String   @id
+  payout_id   String
+  type        String
+  payload     Json?
+  occurred_at DateTime @default(now())
+  payouts     payouts  @relation(fields: [payout_id], references: [id], onDelete: Cascade)
+
+  @@index([payout_id, occurred_at])
+}
+
+model payouts {
+  id                 String          @id
+  merchant_id        String
+  provider           PayoutProvider
+  status             PayoutStatus    @default(PENDING)
+  payment_system     String
+  payout_type        PayoutType
+  amount_minor       Int
+  currency           String          @db.Char(3)
+  msisdn             String
+  external_reference String?
+  provider_reference String?
+  metadata           Json?
+  created_at         DateTime        @default(now())
+  updated_at         DateTime
+  is_test_mode       Boolean         @default(false)
+  payout_events      payout_events[]
+  merchants          merchants       @relation(fields: [merchant_id], references: [id])
+
+  @@unique([merchant_id, external_reference])
+  @@index([merchant_id])
+  @@index([payment_system])
+  @@index([provider_reference])
+}
+
+model provider_credentials {
+  id            String    @id
+  merchant_id   String
+  provider      String
+  environment   String    @default("production")
+  created_at    DateTime  @default(now())
+  updated_at    DateTime
+  encryptedData String
+  merchants     merchants @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+
+  @@unique([merchant_id, provider, environment])
+}
+
+model reconciliation_logs {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  run_id       String    @unique
+  merchant_id  String?
+  started_at   DateTime  @db.Timestamptz(6)
+  completed_at DateTime  @db.Timestamptz(6)
+  result       Json
+  issues_count Int?      @default(0)
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([started_at], map: "idx_reconciliation_logs_date")
+  @@index([merchant_id], map: "idx_reconciliation_logs_merchant")
+}
+
+model reconciliation_summaries {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date                DateTime  @unique @db.Date
+  merchants_processed Int?      @default(0)
+  total_payments      Int?      @default(0)
+  total_payouts       Int?      @default(0)
+  total_volume        BigInt?   @default(0)
+  total_commissions   BigInt?   @default(0)
+  issues_count        Int?      @default(0)
+  status              String?   @default("PENDING")
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([date], map: "idx_reconciliation_summaries_date")
+}
+
+model refresh_tokens {
+  id         String   @id
+  token_hash String   @unique
+  user_id    String
+  created_at DateTime @default(now())
+  expires_at DateTime
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model refund_events {
+  id          String   @id
+  refund_id   String
+  type        String
+  payload     Json?
+  occurred_at DateTime @default(now())
+  refunds     refunds  @relation(fields: [refund_id], references: [id], onDelete: Cascade)
+
+  @@index([refund_id, occurred_at])
+}
+
+model refunds {
+  id                     String                   @id
+  payment_id             String
+  merchant_id            String
+  amount_minor           Int
+  currency               String                   @db.Char(3)
+  status                 RefundStatus             @default(PENDING)
+  reason                 String?
+  provider_reference     String?
+  failure_code           String?
+  metadata               Json?
+  created_at             DateTime                 @default(now())
+  updated_at             DateTime
+  refund_events          refund_events[]
+  merchants              merchants                @relation(fields: [merchant_id], references: [id])
+  transactions           transactions             @relation(fields: [payment_id], references: [id])
+  vat_refund_adjustments vat_refund_adjustments[]
+
+  @@index([merchant_id])
+  @@index([payment_id])
+  @@index([provider_reference])
+}
+
+model sandbox_webhook_logs {
+  id           String    @id
+  merchant_id  String
+  endpoint     String
+  payload      Json
+  headers      Json?
+  simulated_at DateTime  @default(now())
+  response     Json?
+  merchants    merchants @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+
+  @@index([merchant_id, simulated_at])
+}
+
+model saved_filters {
+  id          String    @id
+  merchant_id String
+  name        String
+  type        String
+  filters     Json
+  is_default  Boolean   @default(false)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime
+  merchants   merchants @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+
+  @@index([merchant_id, type])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model subscriptions {
+  id                String                   @id
+  merchant_id       String
+  customer_email    String
+  customer_phone    String?
+  amount_minor      Int
+  currency          String                   @db.Char(3)
+  billing_cycle     SubscriptionBillingCycle
+  status            SubscriptionStatus       @default(ACTIVE)
+  start_date        DateTime
+  next_billing_date DateTime
+  last_billing_date DateTime?
+  cancel_at         DateTime?
+  cancelled_at      DateTime?
+  metadata          Json?
+  is_test_mode      Boolean                  @default(false)
+  created_at        DateTime                 @default(now())
+  updated_at        DateTime
+  plan_type         SubscriptionPlanType?
+  dunning_attempts  dunning_attempts[]
+  merchants         merchants                @relation(fields: [merchant_id], references: [id])
+  transactions      transactions[]
+
+  @@index([customer_email])
+  @@index([merchant_id, plan_type])
+  @@index([merchant_id, status])
+  @@index([next_billing_date])
+}
+
+model transaction_events {
+  id              String       @id
+  paymentId       String
+  type            String
+  providerEventId String?
+  payload         Json?
+  occurredAt      DateTime     @default(now())
+  transactions    transactions @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId, occurredAt])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model transactions {
+  id                 String               @id
+  orderId            String
+  amountMinor        Int
+  currency           String               @db.Char(3)
+  countryCode        String               @db.Char(2)
+  paymentMethod      String
+  gatewayUsed        Gateway
+  status             PaymentStatus        @default(PENDING)
+  providerReference  String?
+  failureCode        String?
+  checkoutPayload    Json?
+  metadata           Json?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  merchant_id        String
+  subscription_id    String?
+  is_test_mode       Boolean              @default(false)
+  platform_fee       Int?                 @default(0)
+  boohpay_fee        Int?                 @default(0)
+  app_commission     Int?                 @default(0)
+  booh_tax_fee       BigInt               @default(0)
+  refunds            refunds[]
+  transaction_events transaction_events[]
+  merchants          merchants            @relation(fields: [merchant_id], references: [id])
+  subscriptions      subscriptions?       @relation(fields: [subscription_id], references: [id])
+
+  @@unique([id, merchant_id])
+  @@index([platform_fee], map: "idx_transactions_platform_fee")
+  @@index([subscription_id], map: "payments_subscription_id_idx")
+  @@index([gatewayUsed])
+  @@index([orderId])
+  @@index([providerReference])
+}
+
+model User {
+  id                   String                  @id @map("id")
+  email                String                  @unique @map("email")
+  passwordHash         String                  @map("password_hash")
+  role                 UserRole                @map("role")
+  merchantId           String?                 @map("merchant_id")
+  createdAt            DateTime                @default(now()) @map("created_at")
+  updatedAt            DateTime                @map("updated_at")
+  passwordResetTokens  password_reset_tokens[]
+  refreshTokens        refresh_tokens[]
+  merchant             Merchant?              @relation(fields: [merchantId], references: [id])
+  
+  @@map("users")
+}
+
+model vat_audit_logs {
+  id             String   @id
+  transaction_id String?
+  report_id      String?
+  action         String
+  actor_id       String?
+  actor_type     String?
+  payload        Json?
+  created_at     DateTime @default(now())
+
+  @@index([action, created_at])
+  @@index([report_id])
+  @@index([transaction_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vat_payments {
+  id                  String           @id
+  report_id           String?
+  merchant_id         String
+  amount              BigInt
+  currency            String           @db.Char(3)
+  recipient_account   String?
+  recipient_name      String?
+  external_payment_id String?
+  status              VatPaymentStatus @default(PENDING)
+  executed_at         DateTime?
+  failure_reason      String?
+  metadata            Json?
+  created_at          DateTime         @default(now())
+  updated_at          DateTime
+  reversement_fee     BigInt           @default(0)
+}
+
+model vat_rates {
+  id               String             @id
+  country_code     String             @db.Char(2)
+  region           String?
+  product_category String
+  rate             Decimal            @db.Decimal(5, 4)
+  effective_from   DateTime
+  effective_to     DateTime?
+  created_at       DateTime           @default(now())
+  updated_at       DateTime
+  vat_transactions vat_transactions[]
+
+  @@unique([country_code, product_category, effective_from])
+  @@index([country_code, effective_from, effective_to])
+  @@index([country_code, product_category, effective_from])
+}
+
+model vat_refund_adjustments {
+  id                 String           @id
+  refund_id          String
+  vat_transaction_id String
+  adjustment_amount  BigInt
+  adjustment_type    String
+  created_at         DateTime         @default(now())
+  refunds            refunds          @relation(fields: [refund_id], references: [id], onDelete: Cascade)
+  vat_transactions   vat_transactions @relation(fields: [vat_transaction_id], references: [id])
+
+  @@index([refund_id])
+  @@index([vat_transaction_id])
+}
+
+model vat_reports {
+  id                String          @id
+  merchant_id       String
+  period_start      DateTime
+  period_end        DateTime
+  total_vat         BigInt
+  total_sales       BigInt
+  total_net         BigInt
+  transaction_count Int             @default(0)
+  status            VatReportStatus @default(DRAFT)
+  generated_at      DateTime        @default(now())
+  submitted_at      DateTime?
+  paid_at           DateTime?
+  metadata          Json?
+  created_at        DateTime        @default(now())
+  updated_at        DateTime
+}
+
+model vat_transactions {
+  id                      String                   @id
+  payment_id              String                   @unique
+  merchant_id             String
+  buyer_country           String?                  @db.Char(2)
+  seller_country          String                   @db.Char(2)
+  currency                String                   @db.Char(3)
+  amount_gross            BigInt
+  amount_net              BigInt
+  vat_amount              BigInt
+  vat_rate_id             String?
+  vat_calculation_version String
+  vat_included            Boolean                  @default(true)
+  applied_rule            String
+  buyer_vat_number        String?
+  is_b2b                  Boolean                  @default(false)
+  product_category        String?
+  metadata                Json?
+  created_at              DateTime                 @default(now())
+  updated_at              DateTime
+  vat_refund_adjustments  vat_refund_adjustments[]
+  merchants               merchants                @relation(fields: [merchant_id], references: [id])
+  vat_rates               vat_rates?               @relation(fields: [vat_rate_id], references: [id])
+
+  @@index([buyer_country])
+  @@index([merchant_id, created_at])
+  @@index([payment_id])
+  @@index([seller_country])
+  @@index([vat_rate_id])
+}
+
+model WebhookDelivery {
+  id              String                @id @map("id")
+  merchantId      String                @map("merchant_id")
+  eventType       String                @map("event_type")
+  payload         Json                  @map("payload")
+  status          WebhookDeliveryStatus @default(PENDING) @map("status")
+  attempts        Int                   @default(0) @map("attempts")
+  lastAttemptAt   DateTime?             @map("last_attempt_at")
+  nextRetryAt     DateTime?             @map("next_retry_at")
+  httpStatusCode  Int?                  @map("http_status_code")
+  errorMessage    String?               @map("error_message")
+  deliveredAt     DateTime?             @map("delivered_at")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @default(now()) @map("updated_at")
+  merchant        merchants             @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId, status])
+  @@index([status, nextRetryAt])
+  @@map("webhook_deliveries")
+}
+
+enum ApiKeyAuditAction {
+  CREATED
+  USED
+  REVOKED
+  REGENERATED
+}
+
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
+}
+
+enum Gateway {
+  STRIPE
+  MONEROO
+  EBILLING
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  BOUNCED
+}
+
+enum NotificationType {
+  PAYMENT_STATUS
+  PAYOUT_STATUS
+  REFUND_STATUS
+  SYSTEM_ALERT
+  WEBHOOK_FAILURE
+  CUSTOMER_NOTIFICATION
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  SUCCEEDED
+  FAILED
+}
+
+enum PayoutProvider {
+  SHAP
+  MONEROO
+  STRIPE
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+}
+
+enum PayoutType {
+  WITHDRAWAL
+  REFUND
+  CASHBACK
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+}
+
+enum SubscriptionBillingCycle {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum SubscriptionPlanType {
+  BASIC
+  TAX_PRO
+  BUSINESS_SUITE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+  TRIALING
+}
+
+enum UserRole {
+  ADMIN
+  MERCHANT
+}
+
+enum VatPaymentStatus {
+  PENDING
+  PROCESSING
+  EXECUTED
+  FAILED
+  CANCELLED
+}
+
+enum VatReportStatus {
+  DRAFT
+  SUBMITTED
+  PAID
+  RECONCILED
+  CANCELLED
+}
+
+enum WebhookDeliveryStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+}

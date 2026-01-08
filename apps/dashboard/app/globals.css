@@ -1,0 +1,976 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Apple/Stripe Premium - Black & White */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
+}
+
+* {
+  @apply border-border;
+}
+
+html {
+  @apply dark;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-feature-settings: 'rlig' 1, 'calt' 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+}
+
+/* Dashboard Layout - Apple/Stripe Style */
+.dashboard-layout {
+  @apply flex min-h-screen bg-background;
+}
+
+.dashboard-layout-loading {
+  @apply flex items-center justify-center min-h-screen;
+}
+
+.loading-spinner {
+  @apply w-10 h-10 border-2 border-border border-t-foreground rounded-full animate-spin;
+}
+
+/* Sidebar - Minimalist Premium */
+.dashboard-sidebar {
+  @apply fixed left-0 top-0 bottom-0 w-64 bg-background border-r border-border z-50 flex flex-col;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-sidebar.sidebar-collapsed {
+  @apply w-20;
+}
+
+.sidebar-header {
+  @apply px-6 py-5 border-b border-border flex items-center justify-between;
+  min-height: 4rem;
+}
+
+.sidebar-brand {
+  @apply flex items-center gap-3;
+}
+
+.brand-logo {
+  @apply w-8 h-8 bg-foreground rounded-lg flex items-center justify-center text-background font-bold text-lg;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  @apply text-lg font-semibold text-foreground tracking-tight;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-collapsed .brand-name {
+  @apply hidden;
+}
+
+.sidebar-toggle {
+  @apply w-7 h-7 rounded-md border border-border bg-background text-muted-foreground cursor-pointer flex items-center justify-center text-xs transition-all hover:bg-accent hover:text-foreground;
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  @apply flex-1 px-3 py-4 overflow-y-auto flex flex-col gap-1;
+}
+
+.nav-item {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground no-underline transition-all relative;
+}
+
+.nav-item:hover {
+  @apply bg-accent text-foreground;
+}
+
+.nav-item.nav-active {
+  @apply bg-foreground text-background font-medium;
+}
+
+.nav-icon {
+  @apply text-base w-5 text-center;
+  flex-shrink: 0;
+}
+
+.nav-label {
+  @apply whitespace-nowrap;
+}
+
+.sidebar-collapsed .nav-label {
+  @apply hidden;
+}
+
+.sidebar-footer {
+  @apply px-3 py-4 border-t border-border flex flex-col gap-2;
+}
+
+.user-profile {
+  @apply flex items-center gap-3 px-3 py-2 rounded-lg;
+}
+
+.user-avatar {
+  @apply w-9 h-9 bg-foreground text-background rounded-lg flex items-center justify-center font-semibold text-sm;
+  flex-shrink: 0;
+}
+
+.user-info {
+  @apply flex-1 min-w-0;
+}
+
+.user-email {
+  @apply text-sm text-foreground font-medium truncate;
+}
+
+.user-role {
+  @apply text-xs text-muted-foreground uppercase tracking-wider;
+}
+
+.sidebar-collapsed .user-info {
+  @apply hidden;
+}
+
+.logout-btn {
+  @apply w-full px-3 py-2 rounded-lg border border-border bg-background text-destructive text-sm font-medium cursor-pointer transition-all hover:bg-destructive/10 hover:border-destructive/20;
+}
+
+/* Main Content */
+.dashboard-main {
+  @apply flex-1 ml-64 flex flex-col min-h-screen;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-sidebar.sidebar-collapsed ~ .dashboard-main {
+  @apply ml-20;
+}
+
+/* Header - Minimalist */
+.dashboard-header {
+  @apply sticky top-0 z-40 bg-background/95 backdrop-blur-xl border-b border-border px-8 py-4 flex items-center justify-between gap-6;
+}
+
+.header-left {
+  @apply flex items-center gap-4 flex-1;
+}
+
+.mobile-menu-btn {
+  @apply hidden w-9 h-9 rounded-lg border border-border bg-background text-foreground cursor-pointer items-center justify-center;
+}
+
+.header-breadcrumb {
+  @apply flex items-center gap-2 text-sm text-muted-foreground;
+}
+
+.header-breadcrumb a {
+  @apply text-muted-foreground no-underline transition-colors hover:text-foreground;
+}
+
+.breadcrumb-separator {
+  @apply text-muted-foreground;
+}
+
+.breadcrumb-current {
+  @apply text-foreground font-medium;
+}
+
+.header-right {
+  @apply flex items-center gap-4;
+}
+
+.header-user {
+  @apply flex items-center gap-3 px-3 py-2 rounded-lg bg-accent border border-border cursor-pointer transition-all hover:border-foreground/20;
+}
+
+.header-user-info {
+  @apply flex flex-col items-end;
+}
+
+.header-user-email {
+  @apply text-sm text-foreground font-medium;
+}
+
+.header-user-role {
+  @apply text-xs text-muted-foreground uppercase tracking-wider;
+}
+
+.header-user-avatar {
+  @apply w-8 h-8 bg-foreground text-background rounded-lg flex items-center justify-center font-semibold text-xs;
+}
+
+/* Content Wrapper */
+.dashboard-content-wrapper {
+  @apply flex-1 p-8;
+}
+
+.dashboard-page {
+  @apply max-w-7xl mx-auto;
+}
+
+.dashboard-hero {
+  @apply mb-8;
+}
+
+/* Table Styles */
+.table-wrapper {
+  @apply border border-border rounded-lg overflow-hidden;
+}
+
+/* Chip/Badge Variants */
+.chip {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.chip-primary {
+  @apply bg-muted text-foreground;
+}
+
+.chip-success {
+  @apply bg-green-500/10 text-green-600 dark:text-green-400;
+}
+
+.chip-warning {
+  @apply bg-yellow-500/10 text-yellow-600 dark:text-yellow-400;
+}
+
+.chip-danger {
+  @apply bg-destructive/10 text-destructive;
+}
+
+/* Empty State */
+.empty-state {
+  @apply text-center py-12 text-muted-foreground;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .dashboard-sidebar {
+    @apply -translate-x-full;
+  }
+
+  .dashboard-sidebar.mobile-open {
+    @apply translate-x-0;
+  }
+
+  .dashboard-main {
+    @apply ml-0;
+  }
+
+  .mobile-menu-btn {
+    @apply flex;
+  }
+
+  .dashboard-content-wrapper {
+    @apply p-4;
+  }
+}
+
+.mobile-overlay {
+  @apply fixed inset-0 bg-black/50 z-40 md:hidden;
+}
+
+/* BoohPay Checkout Wrapper - Apple/Stripe Style - Force Override SDK Styles */
+.boohpay-checkout-wrapper {
+  width: 100%;
+}
+
+.boohpay-checkout-wrapper * {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+}
+
+/* All Input Fields - Force Style Override */
+.boohpay-checkout-wrapper input[type="text"],
+.boohpay-checkout-wrapper input[type="tel"],
+.boohpay-checkout-wrapper input[type="email"],
+.boohpay-checkout-wrapper input[type="number"],
+.boohpay-checkout-wrapper input[type="password"],
+.boohpay-checkout-wrapper input:not([type]),
+.boohpay-checkout-wrapper select,
+.boohpay-checkout-wrapper textarea {
+  width: 100% !important;
+  background-color: hsl(var(--background)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.875rem !important;
+  min-height: 44px !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.boohpay-checkout-wrapper input::placeholder,
+.boohpay-checkout-wrapper textarea::placeholder,
+.boohpay-checkout-wrapper input::-webkit-input-placeholder,
+.boohpay-checkout-wrapper textarea::-webkit-input-placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+  opacity: 1 !important;
+}
+
+/* Input Focus States */
+.boohpay-checkout-wrapper input:focus,
+.boohpay-checkout-wrapper select:focus,
+.boohpay-checkout-wrapper textarea:focus {
+  outline: none !important;
+  border-color: hsl(var(--foreground) / 0.3) !important;
+  box-shadow: 0 0 0 2px hsl(var(--foreground) / 0.1) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+/* All Labels */
+.boohpay-checkout-wrapper label {
+  display: block !important;
+  color: hsl(var(--foreground)) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* All Buttons - Force Override */
+.boohpay-checkout-wrapper button,
+.boohpay-checkout-wrapper button[type="submit"],
+.boohpay-checkout-wrapper button[type="button"] {
+  width: 100% !important;
+  background-color: hsl(var(--foreground)) !important;
+  color: hsl(var(--background)) !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.875rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  min-height: 48px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  letter-spacing: -0.01em !important;
+  box-sizing: border-box !important;
+}
+
+.boohpay-checkout-wrapper button:hover:not(:disabled) {
+  opacity: 0.9 !important;
+}
+
+.boohpay-checkout-wrapper button:active:not(:disabled) {
+  opacity: 0.8 !important;
+}
+
+.boohpay-checkout-wrapper button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.boohpay-checkout-wrapper button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px hsl(var(--foreground) / 0.2) !important;
+}
+
+/* Form Container */
+.boohpay-checkout-wrapper form {
+  width: 100% !important;
+}
+
+.boohpay-checkout-wrapper form > * {
+  margin-bottom: 1.5rem !important;
+}
+
+.boohpay-checkout-wrapper form > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Card Number Specific */
+.boohpay-checkout-wrapper input[name*="card"],
+.boohpay-checkout-wrapper input[name*="number"],
+.boohpay-checkout-wrapper input[name*="cardNumber"] {
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Mobile Money Phone Inputs */
+.boohpay-checkout-wrapper input[type="tel"] {
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Error States */
+.boohpay-checkout-wrapper input.error,
+.boohpay-checkout-wrapper input.is-invalid,
+.boohpay-checkout-wrapper .error input {
+  border-color: hsl(var(--destructive)) !important;
+  color: hsl(var(--destructive)) !important;
+}
+
+.boohpay-checkout-wrapper .error-message,
+.boohpay-checkout-wrapper .invalid-feedback {
+  color: hsl(var(--destructive)) !important;
+  font-size: 0.75rem !important;
+  margin-top: 0.375rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+}
+
+/* Remove any gradient backgrounds from buttons */
+.boohpay-checkout-wrapper button {
+  background-image: none !important;
+  background: hsl(var(--foreground)) !important;
+}
+
+/* Remove any dark backgrounds that SDK might add */
+.boohpay-checkout-wrapper input,
+.boohpay-checkout-wrapper select,
+.boohpay-checkout-wrapper textarea {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .boohpay-checkout-wrapper input,
+  .boohpay-checkout-wrapper select,
+  .boohpay-checkout-wrapper textarea,
+  .boohpay-checkout-wrapper button {
+    min-height: 48px !important;
+  }
+}
+
+/* ============================================
+   AWWWARDS-LEVEL LOGIN DESIGN
+   ============================================ */
+
+/* Auth Layout - Premium Background */
+.auth-layout {
+  @apply relative min-h-screen overflow-hidden;
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
+}
+
+.auth-layout-background {
+  @apply absolute inset-0;
+  overflow: hidden;
+}
+
+.auth-layout-gradient {
+  @apply absolute rounded-full;
+  filter: blur(120px);
+  opacity: 0;
+  animation: gradientFloat 20s ease-in-out infinite;
+}
+
+.auth-layout-gradient-1 {
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  left: -200px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+  animation-delay: 0s;
+}
+
+.auth-layout-gradient-2 {
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  right: -150px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+  animation-delay: 7s;
+}
+
+.auth-layout-gradient-3 {
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, transparent 70%);
+  animation-delay: 14s;
+}
+
+.auth-layout-grid {
+  @apply absolute inset-0;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 30%, transparent 80%);
+  animation: gridPulse 8s ease-in-out infinite;
+}
+
+.dark .auth-layout-grid {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+.auth-layout-content {
+  @apply relative z-10 flex min-h-screen items-center justify-center px-6 py-12;
+}
+
+.auth-layout-inner {
+  @apply w-full max-w-[400px];
+  animation: contentFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes gradientFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Login Container */
+.login-container {
+  animation: containerSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes containerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo */
+.login-logo-wrapper {
+  @apply flex justify-center;
+  animation: logoFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.login-logo-inner {
+  @apply relative;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.login-logo-inner:hover {
+  transform: scale(1.02);
+}
+
+.login-logo {
+  @apply h-auto w-auto;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+  transition: filter 0.3s ease;
+}
+
+.login-logo-inner:hover .login-logo {
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.12));
+}
+
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Form */
+.login-form {
+  animation: formFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+@keyframes formFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Field Group */
+.login-field-group {
+  @apply space-y-2;
+  animation: fieldSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.login-field-group:nth-child(1) {
+  animation-delay: 0.5s;
+}
+
+.login-field-group:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.login-field-group:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+@keyframes fieldSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Label */
+.login-label {
+  @apply text-sm font-medium;
+  color: hsl(var(--foreground) / 0.85);
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.login-label-row {
+  @apply flex items-center justify-between;
+}
+
+.login-forgot-link {
+  @apply text-xs font-medium;
+  color: hsl(var(--foreground) / 0.5);
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.login-forgot-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 right-0 h-px;
+  background: hsl(var(--foreground) / 0.3);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-forgot-link:hover {
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.login-forgot-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Input Wrapper */
+.login-input-wrapper {
+  @apply relative;
+}
+
+.login-input {
+  @apply h-14 w-full !important;
+  background: hsl(var(--background) / 0.6) !important;
+  border: 1.5px solid hsl(var(--border) / 0.5) !important;
+  border-radius: 12px !important;
+  padding: 0 16px !important;
+  font-size: 15px !important;
+  color: hsl(var(--foreground)) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  letter-spacing: -0.01em !important;
+  box-shadow: none !important;
+  ring-offset: 0 !important;
+}
+
+.login-input::placeholder {
+  color: hsl(var(--muted-foreground) / 0.5) !important;
+  transition: color 0.2s ease !important;
+}
+
+.login-input:hover {
+  border-color: hsl(var(--border) / 0.8) !important;
+  background: hsl(var(--background) / 0.8) !important;
+}
+
+.login-input:focus,
+.login-input:focus-visible {
+  outline: none !important;
+  border-color: hsl(var(--foreground) / 0.4) !important;
+  background: hsl(var(--background)) !important;
+  box-shadow: 
+    0 0 0 4px hsl(var(--foreground) / 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-1px) !important;
+  ring: none !important;
+  ring-offset: 0 !important;
+}
+
+.login-input-focused {
+  border-color: hsl(var(--foreground) / 0.4);
+  background: hsl(var(--background));
+}
+
+.login-input-password {
+  @apply pr-14;
+}
+
+/* Input Glow Effect */
+.login-input-glow {
+  @apply absolute inset-0 pointer-events-none;
+  border-radius: 12px;
+  opacity: 0;
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.1) 0%, 
+    rgba(139, 92, 246, 0.1) 100%);
+  filter: blur(20px);
+  transform: scale(1.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.login-input-glow-active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Password Toggle */
+.login-password-toggle {
+  @apply absolute right-4 top-1/2 -translate-y-1/2;
+  color: hsl(var(--foreground) / 0.4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-password-toggle:hover {
+  color: hsl(var(--foreground) / 0.7);
+  background: hsl(var(--background) / 0.5);
+  transform: scale(1.1);
+}
+
+.login-password-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Error Message */
+.login-error {
+  @apply flex items-center gap-2.5 rounded-xl border px-4 py-3.5 text-sm;
+  background: hsl(var(--destructive) / 0.05);
+  border-color: hsl(var(--destructive) / 0.2);
+  color: hsl(var(--destructive));
+  animation: errorSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.login-error-dot {
+  @apply h-2 w-2 rounded-full flex-shrink-0;
+  background: hsl(var(--destructive));
+  animation: errorPulse 2s ease-in-out infinite;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes errorPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.9);
+  }
+}
+
+/* Button */
+.login-button {
+  @apply h-14 w-full relative overflow-hidden !important;
+  background: hsl(var(--foreground)) !important;
+  color: hsl(var(--background)) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  cursor: pointer !important;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 0 0 0 rgba(0, 0, 0, 0) !important;
+  padding: 0 !important;
+}
+
+.login-button::before {
+  content: '';
+  @apply absolute inset-0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.login-button:hover::before {
+  opacity: 1;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.login-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-button-content {
+  @apply flex items-center justify-center gap-2.5 relative z-10;
+}
+
+.login-spinner {
+  @apply h-4 w-4 rounded-full border-2;
+  border-color: currentColor;
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Gradient animation for buttons */
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s ease infinite;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .login-input,
+  .login-button {
+    @apply h-12;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .auth-layout-inner {
+    @apply max-w-full;
+  }
+}
+
+/* Dark mode adjustments */
+.dark .login-input {
+  background: hsl(var(--background) / 0.4);
+  border-color: hsl(var(--border) / 0.3);
+}
+
+.dark .login-input:hover {
+  background: hsl(var(--background) / 0.6);
+  border-color: hsl(var(--border) / 0.5);
+}
+
+.dark .login-input:focus {
+  background: hsl(var(--background) / 0.8);
+  box-shadow: 
+    0 0 0 4px hsl(var(--foreground) / 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}

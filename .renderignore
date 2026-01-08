@@ -1,0 +1,83 @@
+# Render ignore file - fichiers à exclure lors du déploiement
+
+# Dependencies (reconstruits sur Render)
+node_modules/
+dist/
+build/
+.next/
+apps/dashboard/.next/
+apps/dashboard/node_modules/
+packages/*/node_modules/
+
+# Documentation et fichiers de développement
+*.md
+!README.md
+docs/
+ADVANCED_FEATURES_API.md
+AMELIORATIONS_TVA_IMPLENTEES.md
+ANALYSE_*.md
+BOOHTAX_*.md
+CHECKLIST_TESTS.md
+CONFIGURATION_*.md
+CREATE_*.md
+DEBUG_*.md
+EXPLICATION_*.md
+EXPORT_*.md
+FIX_*.md
+FONCTIONNALITES_*.md
+GUIDE_*.md
+IMPLEMENTATION_*.md
+IMPORTANT_*.md
+INTEGRATION_*.md
+INTERFACE_*.md
+PAGINATION_*.md
+RESEND_*.md
+RESTAURATION_*.md
+RESTORATION_*.md
+RESUME_*.md
+ROADMAP_*.md
+SDK_*.md
+STATUT_*.md
+TEST_*.md
+TESTS_*.md
+UI_*.md
+VAT_*.md
+ARCHITECTURE_*.md
+APPLY_*.md
+
+# Scripts de test et développement
+test-*.sh
+test-*.js
+fix-*.sh
+fix-*.py
+fix-*.js
+apply-*.sh
+*.test.ts
+*.spec.ts
+__tests__/
+test/
+tests/
+
+# Configuration locale
+.env
+.env.local
+.env.*.local
+config/docker.env
+*.log
+*.backup
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile.dev
+
+# Misc
+coverage/
+.cache/
+.DS_Store
+Thumbs.db

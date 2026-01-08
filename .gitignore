@@ -1,0 +1,21 @@
+dist/
+node_modules/
+.env
+.env.*
+*.log
+coverage/
+tmp/
+.DS_Store
+apps/dashboard/.next/
+
+# Clés secrètes pour Render (NE JAMAIS COMMITER)
+.render-keys/
+
+# Fichiers de configuration avec secrets
+config/docker.env
+config/*.env
+!config/env.example
+
+
+
+

@@ -1,0 +1,16 @@
+node_modules
+dist
+.git
+.gitignore
+*.log
+tmp
+.env
+.env.*
+config/docker.env
+coverage
+.vscode
+.idea
+**/__pycache__
+**/*.pyc
+
+

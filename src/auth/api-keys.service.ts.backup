@@ -1,0 +1,189 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ApiKeyAuditAction, ApiKeyStatus, Prisma } from '@prisma/client';
+import { createHash, randomBytes, randomUUID } from 'crypto';
+
+import { PrismaService } from '../prisma/prisma.service';
+
+@Injectable()
+export class ApiKeysService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async generateApiKey(merchantId: string, label?: string): Promise<{ apiKey: string; id: string }> {
+    const apiKey = this.createToken();
+    const keyHash = this.hashToken(apiKey);
+    const id = randomUUID();
+
+    const data: Prisma.ApiKeyCreateInput = {
+      id,
+      label,
+      keyHash,
+      merchant: {
+        connect: { id: merchantId },
+      },
+      status: ApiKeyStatus.ACTIVE,
+    };
+
+    const created = await this.prisma.apiKeys.create({ data });
+    await this.createAudit(created.id, ApiKeyAuditAction.CREATED);
+
+    return { apiKey, id: created.id };
+  }
+
+  async listMerchantKeys(merchantId: string) {
+    return this.prisma.apiKeys.findMany({
+      where: { merchantId },
+      orderBy: [{ createdAt: 'desc' }],
+      select: {
+        id: true,
+        label: true,
+        merchantId: true,
+        createdAt: true,
+        lastUsedAt: true,
+        status: true,
+        revokedAt: true,
+      },
+    });
+  }
+
+  async findById(apiKeyId: string) {
+    return this.prisma.apiKeys.findUnique({
+      where: { id: apiKeyId },
+      select: {
+        id: true,
+        label: true,
+        merchantId: true,
+        createdAt: true,
+        lastUsedAt: true,
+        status: true,
+        revokedAt: true,
+      },
+    });
+  }
+
+  async deleteApiKey(apiKeyId: string) {
+    const existing = await this.prisma.apiKey.findUnique({ where: { id: apiKeyId } });
+
+    if (!existing) {
+      throw new NotFoundException(`API key ${apiKeyId} not found`);
+    }
+
+    // Delete audit trail first (due to foreign key constraint)
+    await this.prisma.apiKeyAudit.deleteMany({
+      where: { apiKeyId },
+    });
+
+    // Delete the key
+    await this.prisma.apiKey.delete({
+      where: { id: apiKeyId },
+    });
+
+    return { success: true, message: 'API key deleted successfully' };
+  }
+
+  async getAuditTrail(apiKeyId: string, limit = 50) {
+    return this.prisma.apiKeyAudit.findMany({
+      where: { apiKeyId },
+      orderBy: { occurredAt: 'desc' },
+      take: limit,
+    });
+  }
+
+  async revokeApiKey(apiKeyId: string) {
+    const existing = await this.prisma.apiKey.findUnique({ where: { id: apiKeyId } });
+
+    if (!existing) {
+      throw new NotFoundException(`API key ${apiKeyId} not found`);
+    }
+
+    if (existing.status === ApiKeyStatus.REVOKED) {
+      return existing;
+    }
+
+    const updated = await this.prisma.apiKey.update({
+      where: { id: apiKeyId },
+      data: {
+        status: ApiKeyStatus.REVOKED,
+        revokedAt: new Date(),
+      },
+      select: {
+        id: true,
+        label: true,
+        merchantId: true,
+        createdAt: true,
+        lastUsedAt: true,
+        status: true,
+        revokedAt: true,
+      },
+    });
+
+    await this.createAudit(apiKeyId, ApiKeyAuditAction.REVOKED);
+
+    return updated;
+  }
+
+  async regenerateApiKey(apiKeyId: string): Promise<{ apiKey: string }> {
+    const existing = await this.prisma.apiKey.findUnique({
+      where: { id: apiKeyId },
+      select: {
+        id: true,
+        status: true,
+        merchantId: true,
+        label: true,
+      },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`API key ${apiKeyId} not found`);
+    }
+
+    await this.prisma.apiKey.update({
+      where: { id: apiKeyId },
+      data: {
+        status: ApiKeyStatus.REVOKED,
+        revokedAt: new Date(),
+      },
+    });
+
+    await this.createAudit(apiKeyId, ApiKeyAuditAction.REVOKED);
+    await this.createAudit(apiKeyId, ApiKeyAuditAction.REGENERATED);
+
+    return this.generateApiKey(existing.merchantId, existing.label ?? undefined);
+  }
+
+  async recordUsage(
+    apiKeyId: string,
+    context: { ip?: string | null; userAgent?: string | null },
+  ): Promise<void> {
+    await this.prisma.apiKey.update({
+      where: { id: apiKeyId },
+      data: {
+        lastUsedAt: new Date(),
+      },
+    });
+
+    await this.createAudit(apiKeyId, ApiKeyAuditAction.USED, context);
+  }
+
+  hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex');
+  }
+
+  private createToken(): string {
+    return randomBytes(32).toString('base64url');
+  }
+
+  private async createAudit(
+    apiKeyId: string,
+    action: ApiKeyAuditAction,
+    context?: { ip?: string | null; userAgent?: string | null },
+  ) {
+    await this.prisma.apiKeyAudit.create({
+      data: {
+        apiKeyId,
+        action,
+        ipAddress: context?.ip ?? undefined,
+        userAgent: context?.userAgent ?? undefined,
+      },
+    });
+  }
+}

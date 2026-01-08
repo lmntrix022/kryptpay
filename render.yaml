@@ -1,0 +1,143 @@
+services:
+  # Backend API - NestJS
+  - type: web
+    name: kryptpay-api
+    env: node
+    plan: starter
+    buildCommand: npm ci && npm run prisma:generate && npm run build
+    startCommand: npm run prisma:migrate:deploy && node dist/main.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kryptpay-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: kryptpay-redis
+          property: connectionString
+      # JWT & Auth
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: "900"
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: "604800"
+      - key: PASSWORD_RESET_TOKEN_TTL
+        value: "900"
+      - key: ADMIN_TOKEN
+        generateValue: true
+      # Encryption
+      - key: DATA_ENCRYPTION_KEY
+        generateValue: true
+        # Note: Must be exactly 32 bytes (256 bits) base64 encoded
+        # Generate with: openssl rand -base64 32
+      # Rate Limiting
+      - key: THROTTLE_TTL
+        value: "60000"
+      - key: THROTTLE_LIMIT
+        value: "100"
+      # Email (Resend)
+      - key: EMAIL_ENABLED
+        value: "true"
+      - key: EMAIL_PROVIDER
+        value: "resend"
+      - key: EMAIL_FROM
+        value: "noreply@kryptpay.io"
+      - key: RESEND_API_KEY
+        sync: false
+        # Set this in Render dashboard
+      # Stripe
+      - key: STRIPE_SECRET_KEY
+        sync: false
+        # Set this in Render dashboard
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+        # Set this in Render dashboard
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+        # Set this in Render dashboard
+      - key: STRIPE_CONNECT_REFRESH_URL
+        sync: false
+        # Set to: https://your-dashboard-url.render.app/connect/error
+      - key: STRIPE_CONNECT_RETURN_URL
+        sync: false
+        # Set to: https://your-dashboard-url.render.app/connect/success
+      # Moneroo
+      - key: MONEROO_SECRET_KEY
+        sync: false
+        # Set this in Render dashboard
+      - key: MONEROO_WEBHOOK_SECRET
+        sync: false
+        # Set this in Render dashboard
+      # eBilling
+      - key: EBILLING_USERNAME
+        sync: false
+        # Set this in Render dashboard
+      - key: EBILLING_SHARED_KEY
+        sync: false
+        # Set this in Render dashboard
+      - key: EBILLING_BASE_URL
+        value: "https://stg.billing-easy.com/api/v1/merchant"
+      - key: EBILLING_WEBHOOK_TOKEN
+        sync: false
+        # Set this in Render dashboard
+      # SHAP (Payout)
+      - key: SHAP_BASE_URL
+        value: "https://staging.billing-easy.net/shap/api/v1/merchant"
+      - key: SHAP_API_ID
+        sync: false
+        # Set this in Render dashboard
+      - key: SHAP_API_SECRET
+        sync: false
+        # Set this in Render dashboard
+      - key: SHAP_WEBHOOK_TOKEN
+        sync: false
+        # Set this in Render dashboard
+      # App URL (for email links)
+      - key: APP_URL
+        sync: false
+        # Set to: https://your-dashboard-url.render.app
+
+  # Frontend Dashboard - Next.js
+  - type: web
+    name: kryptpay-dashboard
+    env: node
+    plan: starter
+    rootDir: apps/dashboard
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NEXT_PUBLIC_API_BASE_URL
+        fromService:
+          type: web
+          name: kryptpay-api
+          property: host
+        # Will be: https://kryptpay-api.onrender.com/v1
+        # You may need to set this manually: https://kryptpay-api.onrender.com/v1
+
+databases:
+  # PostgreSQL Database
+  - name: kryptpay-db
+    databaseName: kryptpay
+    user: kryptpay
+    plan: starter
+
+# Redis (optional - you can use Upstash Redis or Redis Cloud instead)
+# Uncomment if you want to use Render's Redis service
+# Note: Render's Redis is a paid service
+# For free tier, consider using Upstash Redis (https://upstash.com)
+# - type: redis
+#   name: kryptpay-redis
+#   plan: starter
+#   ipAllowList: []  # Allow connections from Render services only
