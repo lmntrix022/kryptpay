@@ -19,17 +19,13 @@ const nextConfig = {
   },
   transpilePackages: ['@boohpay/sdk'],
   webpack: (config, { isServer }) => {
-    // Préserver l'alias @/ pour les composants UI
+    // Configurer tous les alias en une seule fois pour éviter d'écraser
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, '.'),
       '@boohpay/sdk': path.resolve(__dirname, '../../packages/boohpay-sdk/src'),
-    };
-    
-    // Configurer webpack pour gérer les dépendances optionnelles Stripe dans le SDK
-    // Le SDK utilise try/catch pour gérer les dépendances manquantes
-    config.resolve.alias = {
-      ...config.resolve.alias,
+      // Configurer webpack pour gérer les dépendances optionnelles Stripe dans le SDK
+      // Le SDK utilise try/catch pour gérer les dépendances manquantes
       '@stripe/react-stripe-js': false,
       '@stripe/stripe-js': false,
     };
