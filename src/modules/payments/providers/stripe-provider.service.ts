@@ -68,32 +68,11 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
     this.logger.debug(`Creating Stripe payment intent for order ${dto.orderId}`);
 
     // Vérifier si on peut utiliser le compte Connect
-    let useConnectAccount = Boolean(
+    // OPTIMISATION: Ne pas vérifier le statut en temps réel pour éviter la latence
+    // On utilisera le compte Connect si disponible, et Stripe retournera une erreur claire si nécessaire
+    const useConnectAccount = Boolean(
       !merchantCredentials?.secretKey && merchantCredentials?.connectAccountId,
     );
-
-    // Si on utilise un compte Connect, vérifier qu'il peut effectuer des charges
-    if (useConnectAccount && merchantCredentials?.connectAccountId) {
-      try {
-        const account = await this.stripe.accounts.retrieve(merchantCredentials.connectAccountId);
-        if (!account.charges_enabled) {
-          this.logger.warn(
-            `Stripe Connect account ${merchantCredentials.connectAccountId} cannot make charges. ` +
-            `charges_enabled: ${account.charges_enabled}, details_submitted: ${account.details_submitted}. ` +
-            `Falling back to platform account.`
-          );
-          // Ne pas utiliser le compte Connect si charges_enabled est false
-          useConnectAccount = false;
-        }
-      } catch (error) {
-        this.logger.warn(
-          `Failed to verify Stripe Connect account status: ${error instanceof Error ? error.message : 'Unknown error'}. ` +
-          `Falling back to platform account.`
-        );
-        // En cas d'erreur, ne pas utiliser le compte Connect
-        useConnectAccount = false;
-      }
-    }
 
     const stripeClient = merchantCredentials?.secretKey
       ? new Stripe(effectiveSecret, {
@@ -112,25 +91,18 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
     let originalAmountCurrency = originalCurrency;
 
     if (isCfaCurrency) {
-      // Convertir XOF/XAF en EUR
-      // Le montant reçu est déjà en unités mineures (FCFA)
-      // On doit le convertir en centimes EUR
-      try {
-        const conversionResult = await this.currencyConverter.fcfaToCents(dto.amount);
-        finalAmount = conversionResult;
-        finalCurrency = 'eur';
-        conversionRate = conversionResult / dto.amount;
-        
-        this.logger.log(
-          `Converted ${dto.amount} ${originalCurrency} → ${finalAmount} EUR cents (rate: ${conversionRate.toFixed(6)})`,
-        );
-      } catch (error) {
-        this.logger.error(
-          `Currency conversion failed for ${dto.amount} ${originalCurrency} to EUR`,
-          error as Error,
-        );
-        throw new ServiceUnavailableException('Currency conversion failed for Stripe payment');
-      }
+      // OPTIMISATION: Conversion XOF/XAF → EUR avec taux fixe (instantané, pas d'appel API)
+      // Taux fixe: 1 EUR = 655.957 XOF/XAF
+      const FIXED_CFA_RATE = 655.957;
+      // Le montant est en FCFA (unités mineures), on le convertit directement en centimes EUR
+      // FCFA / 655.957 = EUR, puis * 100 pour avoir les centimes
+      finalAmount = Math.round((dto.amount / FIXED_CFA_RATE) * 100);
+      finalCurrency = 'eur';
+      conversionRate = 100 / FIXED_CFA_RATE;
+      
+      this.logger.debug(
+        `Converted ${dto.amount} ${originalCurrency} → ${finalAmount} EUR cents (rate: ${conversionRate.toFixed(6)})`,
+      );
     }
 
     try {
