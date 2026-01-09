@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 
 import { ApiKeysService } from '../../auth/api-keys.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { getMerchantsSelect } from '../../prisma/merchants-select.util';
 
 import { CreateMerchantDto } from './dto/create-merchant.dto';
 
@@ -42,15 +43,10 @@ export class MerchantsService {
   }
 
   async listMerchants() {
-    // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
+    // TODO: Une fois la migration appliquée, revenir à: include: { _count: { select: {...} } }
     const merchants = await this.prisma.merchants.findMany({
       select: {
-        id: true,
-        name: true,
-        created_at: true,
-        updated_at: true,
-        app_commission_rate: true,
-        app_commission_fixed: true,
+        ...getMerchantsSelect(),
         _count: {
           select: {
             transactions: true,

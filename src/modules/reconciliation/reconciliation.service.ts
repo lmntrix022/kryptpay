@@ -3,6 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { PaymentStatus, PayoutStatus, Prisma } from '@prisma/client';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { getMerchantsSelect, getUsersSelect } from '../../prisma/merchants-select.util';
 import { NotificationService } from '../notifications/services/notification.service';
 
 export interface ReconciliationResult {
@@ -520,17 +521,12 @@ export class ReconciliationService {
   ): Promise<void> {
     try {
       // Récupérer les infos du merchant
-      // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
+      // TODO: Une fois la migration appliquée, revenir à: include: { users: { take: 1 } }
       const merchant = await this.prisma.merchants.findUnique({
         where: { id: merchant_id },
         select: {
-          id: true,
-          name: true,
-          created_at: true,
-          updated_at: true,
-          app_commission_rate: true,
-          app_commission_fixed: true,
-          users: { take: 1, select: { id: true, email: true } },
+          ...getMerchantsSelect(),
+          users: { take: 1, select: getUsersSelect() },
         },
       });
 

@@ -1,0 +1,364 @@
+{
+  "exportedAt": "2026-01-09T11:06:39.511Z",
+  "version": "1.0",
+  "users": [
+    {
+      "id": "f147f661-7db1-403b-a081-d940f89da8d3",
+      "email": "admin@booh.ga",
+      "password_hash": "$2b$12$bqMFleQusvUpH/hH2oIdGurMmlhDzqvVxwhZedNlDEL0mrCr.AHcC",
+      "role": "ADMIN",
+      "merchant_id": null,
+      "created_at": "2025-12-03T19:09:44.013Z",
+      "updated_at": "2025-12-03T19:09:44.010Z"
+    },
+    {
+      "id": "155288e1-a88e-4db2-a0ab-7130218b467b",
+      "email": "quantin@miscoch-it.ga",
+      "password_hash": "$2b$10$Pr6UcR2IYqmfFjx/6/4pW.AiK8jdEHKuurI.0lZPVMeKyaB47zE5W",
+      "role": "MERCHANT",
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "created_at": "2025-12-17T13:18:46.498Z",
+      "updated_at": "2025-12-17T13:18:46.497Z"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "email": "contact@techcorp-solutions.com",
+      "password_hash": "$2b$10$n4/qfJ5DWRKcVa4QRXbaNed74SGbNvDpaWyep1dkNbB0nCSb8Yqim",
+      "role": "MERCHANT",
+      "merchant_id": "15c02a5c-272d-4f0a-b1f1-33b735de0404",
+      "created_at": "2026-01-07T17:16:07.258Z",
+      "updated_at": "2026-01-07T17:16:07.258Z"
+    },
+    {
+      "id": "c789c13a-c30f-4f07-a3c5-20e84693e029",
+      "email": "admin@kryptpay.io",
+      "password_hash": "$2b$12$dNpuj5ruhq6N4Yj.6XRdQecfYWrILofIbm.w33snj9i8FWei.7f0u",
+      "role": "ADMIN",
+      "merchant_id": null,
+      "created_at": "2026-01-08T18:53:22.479Z",
+      "updated_at": "2026-01-08T18:53:22.477Z"
+    },
+    {
+      "id": "7c0070b0-23c3-4336-b009-5a03898de61b",
+      "email": "contact@kryptpay.io",
+      "password_hash": "$2b$12$z9vl2TctQHDVcEz/hPCC.OTY3zszcuydaYk4OZP0V7cKCT4WADiB2",
+      "role": "MERCHANT",
+      "merchant_id": "964f9ae4-38da-4a95-800d-c32915468eaa",
+      "created_at": "2026-01-08T18:53:22.756Z",
+      "updated_at": "2026-01-08T18:53:22.756Z"
+    }
+  ],
+  "merchants": [
+    {
+      "id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "name": "Miscoch IT",
+      "created_at": "2025-12-17T13:18:46.434Z",
+      "updated_at": "2025-12-17T13:18:46.432Z",
+      "webhook_secret": null,
+      "webhook_url": null,
+      "app_commission_rate": 0,
+      "app_commission_fixed": 0
+    },
+    {
+      "id": "15c02a5c-272d-4f0a-b1f1-33b735de0404",
+      "name": "TechCorp Solutions",
+      "created_at": "2026-01-07T14:58:25.754Z",
+      "updated_at": "2026-01-07T14:58:25.754Z",
+      "webhook_secret": null,
+      "webhook_url": null,
+      "app_commission_rate": 0,
+      "app_commission_fixed": 0
+    },
+    {
+      "id": "758b1e43-a806-45b4-9f9c-b5df91683de3",
+      "name": "Kryptbnb Platform",
+      "created_at": "2026-01-08T15:59:14.308Z",
+      "updated_at": "2026-01-08T15:59:14.306Z",
+      "webhook_secret": null,
+      "webhook_url": null,
+      "app_commission_rate": 0,
+      "app_commission_fixed": 0
+    },
+    {
+      "id": "eda4d580-4bb4-4ad9-9004-6fa8527b5a11",
+      "name": "Kryptbnb Platform",
+      "created_at": "2026-01-08T16:08:04.563Z",
+      "updated_at": "2026-01-08T16:08:04.562Z",
+      "webhook_secret": null,
+      "webhook_url": null,
+      "app_commission_rate": 0,
+      "app_commission_fixed": 0
+    },
+    {
+      "id": "964f9ae4-38da-4a95-800d-c32915468eaa",
+      "name": "KryptPay",
+      "created_at": "2026-01-08T18:53:22.490Z",
+      "updated_at": "2026-01-08T18:53:22.489Z",
+      "webhook_secret": null,
+      "webhook_url": null,
+      "app_commission_rate": 0,
+      "app_commission_fixed": 0
+    }
+  ],
+  "apiKeys": [
+    {
+      "id": "a51ed166-3c50-4a7a-aeca-02ec46383040",
+      "merchant_id": "15c02a5c-272d-4f0a-b1f1-33b735de0404",
+      "key_hash": "a49ca69cc72a375e6c46318e981932269b312bb2ca45aa25798be621141a0bca",
+      "status": "ACTIVE",
+      "last_used_at": null,
+      "created_at": "2026-01-07T14:58:34.783Z",
+      "updated_at": null
+    },
+    {
+      "id": "0bf131f6-2b46-4a84-9f33-4939b1d448fc",
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "key_hash": "44f0bbac56a185aa182de462970952f33cb10b5a575ee088d9ea6f3d514a7e10",
+      "status": "ACTIVE",
+      "last_used_at": "2026-01-08T14:40:40.729Z",
+      "created_at": "2026-01-08T14:14:12.317Z",
+      "updated_at": null
+    },
+    {
+      "id": "ff3546e3-a21e-42f5-9628-c1e339c03121",
+      "merchant_id": "758b1e43-a806-45b4-9f9c-b5df91683de3",
+      "key_hash": "cc97e105282a8fe91f8844686d2df6249a9c6aa35f0d61a20ee8118ea58da80d",
+      "status": "ACTIVE",
+      "last_used_at": "2026-01-08T15:59:14.341Z",
+      "created_at": "2026-01-08T15:59:14.321Z",
+      "updated_at": null
+    },
+    {
+      "id": "dfadd6d9-8bc6-49b6-b256-98569e38d475",
+      "merchant_id": "eda4d580-4bb4-4ad9-9004-6fa8527b5a11",
+      "key_hash": "4bf244b3bf52b0d8074a4d395ab29eb942ba3aecf23c90f7e261f45d26729555",
+      "status": "ACTIVE",
+      "last_used_at": "2026-01-08T17:30:22.539Z",
+      "created_at": "2026-01-08T16:08:04.572Z",
+      "updated_at": null
+    }
+  ],
+  "transactions": [
+    {
+      "id": "3b38dd5a-e766-43f5-b16b-7e68607c904e",
+      "orderId": "demo_1767882934889",
+      "amountMinor": 1000,
+      "currency": "USD",
+      "countryCode": "US",
+      "paymentMethod": "MOBILE_MONEY",
+      "gatewayUsed": "MONEROO",
+      "status": "PENDING",
+      "providerReference": "py_pf56nos93sgl",
+      "failureCode": null,
+      "checkoutPayload": {
+        "url": "https://checkout.moneroo.io/py_pf56nos93sgl",
+        "type": "REDIRECT"
+      },
+      "metadata": {
+        "demo": true,
+        "provider": "moneroo",
+        "paymentId": "py_pf56nos93sgl",
+        "checkoutUrl": "https://checkout.moneroo.io/py_pf56nos93sgl",
+        "environment": "production",
+        "preferredProvider": "AIRTEL_MONEY",
+        "mobileMoneyProvider": "AIRTEL_MONEY"
+      },
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "subscription_id": null,
+      "is_test_mode": false,
+      "platform_fee": 115,
+      "boohpay_fee": 115,
+      "app_commission": 0,
+      "booh_tax_fee": "0",
+      "createdAt": "2026-01-08T14:40:40.747Z",
+      "updatedAt": "2026-01-08T14:40:40.746Z"
+    },
+    {
+      "id": "5c3033f9-31c5-4c67-bf11-443cc51ebf9f",
+      "orderId": "demo_1767882156520",
+      "amountMinor": 10000,
+      "currency": "XAF",
+      "countryCode": "GA",
+      "paymentMethod": "CARD",
+      "gatewayUsed": "STRIPE",
+      "status": "PENDING",
+      "providerReference": "pi_3SnKINIZPIOMKv4o1XMXVKU1",
+      "failureCode": null,
+      "checkoutPayload": {
+        "type": "CLIENT_SECRET",
+        "clientSecret": "pi_3SnKINIZPIOMKv4o1XMXVKU1_secret_5a9vWsEEZ7PgrCyx1hLmCeNHy",
+        "stripeAccount": "acct_1Sn1d7IZPIOMKv4o",
+        "publishableKey": "pk_test_51SOQlZIRFlbBRxmQhEeVOBm4zAzXjRRntkWxqixyvSCufkpDnCBvbu599udPgUUW53oh4r3aOUUw5JUjlkTByW00002ygYogdv"
+      },
+      "metadata": {
+        "demo": true,
+        "provider": "stripe",
+        "connectAccountId": "acct_1Sn1d7IZPIOMKv4o",
+        "merchantSpecific": false,
+        "paymentIntentStatus": "requires_payment_method",
+        "stripePaymentMethodId": "pm_1SnKIMIRFlbBRxmQCODIuYCd"
+      },
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "subscription_id": null,
+      "is_test_mode": false,
+      "platform_fee": 250,
+      "boohpay_fee": 250,
+      "app_commission": 0,
+      "booh_tax_fee": "0",
+      "createdAt": "2026-01-08T14:34:21.564Z",
+      "updatedAt": "2026-01-08T14:34:21.563Z"
+    },
+    {
+      "id": "69a9df97-30e5-409f-b39f-e10bb5381887",
+      "orderId": "bk_412b0c2f",
+      "amountMinor": 1587690,
+      "currency": "XOF",
+      "countryCode": "SN",
+      "paymentMethod": "CARD",
+      "gatewayUsed": "STRIPE",
+      "status": "PENDING",
+      "providerReference": "pi_3SnN2RIRFlbBRxmQ0eGK9zuv",
+      "failureCode": null,
+      "checkoutPayload": {
+        "type": "CLIENT_SECRET",
+        "clientSecret": "pi_3SnN2RIRFlbBRxmQ0eGK9zuv_secret_8PZBZDOQZ0Lq5ULBiYAcRHt7z",
+        "publishableKey": "pk_test_51SOQlZIRFlbBRxmQhEeVOBm4zAzXjRRntkWxqixyvSCufkpDnCBvbu599udPgUUW53oh4r3aOUUw5JUjlkTByW00002ygYogdv"
+      },
+      "metadata": {
+        "bid": "412b0c2f-60bb-4dec-9598-a0bc740abe5e",
+        "src": "bnb2",
+        "type": "booking",
+        "vatRate": 18,
+        "provider": "stripe",
+        "vatAmount": 242190,
+        "originalMethod": "card",
+        "subtotalAmount": 1345500,
+        "expectedGateway": "STRIPE",
+        "merchantSpecific": false,
+        "paymentIntentStatus": "requires_payment_method"
+      },
+      "merchant_id": "eda4d580-4bb4-4ad9-9004-6fa8527b5a11",
+      "subscription_id": null,
+      "is_test_mode": false,
+      "platform_fee": 23915,
+      "boohpay_fee": 23915,
+      "app_commission": 0,
+      "booh_tax_fee": "0",
+      "createdAt": "2026-01-08T17:30:22.560Z",
+      "updatedAt": "2026-01-08T17:30:22.559Z"
+    },
+    {
+      "id": "9a5e1f11-5d70-478c-a7c4-29e623bc8b96",
+      "orderId": "bk_d711e8e1",
+      "amountMinor": 488520,
+      "currency": "XOF",
+      "countryCode": "SN",
+      "paymentMethod": "CARD",
+      "gatewayUsed": "STRIPE",
+      "status": "PENDING",
+      "providerReference": "pi_3SnLr3IRFlbBRxmQ07flvzmk",
+      "failureCode": null,
+      "checkoutPayload": {
+        "type": "CLIENT_SECRET",
+        "clientSecret": "pi_3SnLr3IRFlbBRxmQ07flvzmk_secret_iniltKDx7wKAp1pTOVbEE6KD0",
+        "publishableKey": "pk_test_51SOQlZIRFlbBRxmQhEeVOBm4zAzXjRRntkWxqixyvSCufkpDnCBvbu599udPgUUW53oh4r3aOUUw5JUjlkTByW00002ygYogdv"
+      },
+      "metadata": {
+        "bid": "d711e8e1-5527-4b7c-b665-96c9bbae0e7a",
+        "src": "bnb2",
+        "type": "booking",
+        "vatRate": 18,
+        "provider": "stripe",
+        "vatAmount": 74520,
+        "originalMethod": "card",
+        "subtotalAmount": 414000,
+        "expectedGateway": "STRIPE",
+        "merchantSpecific": false,
+        "paymentIntentStatus": "requires_payment_method"
+      },
+      "merchant_id": "eda4d580-4bb4-4ad9-9004-6fa8527b5a11",
+      "subscription_id": null,
+      "is_test_mode": false,
+      "platform_fee": 7428,
+      "boohpay_fee": 7428,
+      "app_commission": 0,
+      "booh_tax_fee": "0",
+      "createdAt": "2026-01-08T16:14:32.663Z",
+      "updatedAt": "2026-01-08T16:14:32.662Z"
+    },
+    {
+      "id": "e2350614-0cca-450c-847a-460100fa4b81",
+      "orderId": "demo_1767882894877",
+      "amountMinor": 10000,
+      "currency": "XAF",
+      "countryCode": "GA",
+      "paymentMethod": "MOBILE_MONEY",
+      "gatewayUsed": "EBILLING",
+      "status": "PENDING",
+      "providerReference": "5574025204",
+      "failureCode": null,
+      "checkoutPayload": {
+        "type": "INFO",
+        "billId": "5574025204",
+        "instructions": "Un push USSD vient d’être envoyé. Ouvre ton application Mobile Money pour valider le paiement.",
+        "paymentSystem": "airtelmoney"
+      },
+      "metadata": {
+        "demo": true,
+        "msisdn": "24174398524",
+        "provider": "ebilling",
+        "paymentSystem": "airtelmoney",
+        "preferredProvider": "AIRTEL_MONEY",
+        "mobileMoneyProvider": "AIRTEL_MONEY"
+      },
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "subscription_id": null,
+      "is_test_mode": false,
+      "platform_fee": 250,
+      "boohpay_fee": 250,
+      "app_commission": 0,
+      "booh_tax_fee": "0",
+      "createdAt": "2026-01-08T14:35:08.644Z",
+      "updatedAt": "2026-01-08T14:35:08.643Z"
+    }
+  ],
+  "payouts": [],
+  "refunds": [],
+  "subscriptions": [],
+  "webhookDeliveries": [],
+  "providerCredentials": [
+    {
+      "id": "12187310-801a-4c7c-8bb4-46214135fd7d",
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "provider": "SHAP",
+      "environment": "production",
+      "created_at": "2026-01-07T18:37:41.208Z",
+      "updated_at": "2026-01-07T18:37:41.207Z"
+    },
+    {
+      "id": "e1376772-dc83-492a-9944-6b5595769d13",
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "provider": "STRIPE",
+      "environment": "production",
+      "created_at": "2026-01-07T18:38:52.750Z",
+      "updated_at": "2026-01-07T18:38:52.749Z"
+    },
+    {
+      "id": "81a2199b-5b55-44c4-951e-a35bc25c0247",
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "provider": "EBILLING",
+      "environment": "production",
+      "created_at": "2026-01-07T18:34:16.024Z",
+      "updated_at": "2026-01-07T18:47:19.582Z"
+    },
+    {
+      "id": "f6bc9d35-070a-45fa-8328-6f6e8afd8616",
+      "merchant_id": "c9cd029d-07ac-444f-85e4-e7e32445eb23",
+      "provider": "MONEROO",
+      "environment": "production",
+      "created_at": "2026-01-07T18:50:24.239Z",
+      "updated_at": "2026-01-07T18:50:24.238Z"
+    }
+  ],
+  "notificationPreferences": []
+}

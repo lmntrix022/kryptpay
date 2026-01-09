@@ -76,6 +76,16 @@ export class StripeConnectService {
         throw error;
       }
       if (error instanceof Stripe.errors.StripeError) {
+        // Check if it's an authentication error (expired/invalid key)
+        if (
+          error.type === 'StripeAuthenticationError' ||
+          error.message.includes('Expired API Key') ||
+          error.message.includes('Invalid API Key')
+        ) {
+          throw new ServiceUnavailableException(
+            'Stripe API key is expired or invalid. Please update STRIPE_SECRET_KEY in your environment variables.',
+          );
+        }
         throw new ServiceUnavailableException(
           `Unable to create Stripe Connect onboarding link: ${error.message}`,
         );
@@ -85,35 +95,61 @@ export class StripeConnectService {
   }
 
   async getAccountStatus(merchant_id: string) {
-    const credentials =
-      await this.providerCredentialsService.getCredentials<StripeCredentialPayload>(
-          merchant_id,
-        'STRIPE',
-      );
+    try {
+      const credentials =
+        await this.providerCredentialsService.getCredentials<StripeCredentialPayload>(
+            merchant_id,
+          'STRIPE',
+        );
 
-    if (!credentials?.connectAccountId) {
+      if (!credentials?.connectAccountId) {
+        return {
+          connected: false,
+        };
+      }
+
+      const account = await this.stripe.accounts.retrieve(credentials.connectAccountId);
+
+      const completed = Boolean(account.details_submitted && account.charges_enabled);
+
+      if (completed && !credentials.connectAccountCompleted) {
+        await this.providerCredentialsService.setCredentials(merchant_id, 'STRIPE', 'production', {
+          connectAccountCompleted: true,
+        });
+      }
+
       return {
-        connected: false,
+        connected: true,
+        accountId: account.id,
+        chargesEnabled: account.charges_enabled,
+        payoutsEnabled: account.payouts_enabled,
+        detailsSubmitted: account.details_submitted,
       };
+    } catch (error) {
+      // Handle Stripe API errors, especially expired keys
+      if (error instanceof Stripe.errors.StripeError) {
+        // Check if it's an authentication error (expired/invalid key)
+        if (
+          error.type === 'StripeAuthenticationError' ||
+          error.message.includes('Expired API Key') ||
+          error.message.includes('Invalid API Key')
+        ) {
+          throw new ServiceUnavailableException(
+            'Stripe API key is expired or invalid. Please update STRIPE_SECRET_KEY in your environment variables.',
+          );
+        }
+        // Other Stripe errors
+        throw new ServiceUnavailableException(
+          `Unable to retrieve Stripe Connect account status: ${error.message}`,
+        );
+      }
+      // Re-throw ServiceUnavailableException as-is
+      if (error instanceof ServiceUnavailableException) {
+        throw error;
+      }
+      // Unknown errors
+      throw new ServiceUnavailableException('Unable to retrieve Stripe Connect account status');
     }
-
-    const account = await this.stripe.accounts.retrieve(credentials.connectAccountId);
-
-    const completed = Boolean(account.details_submitted && account.charges_enabled);
-
-    if (completed && !credentials.connectAccountCompleted) {
-      await this.providerCredentialsService.setCredentials(merchant_id, 'STRIPE', 'production', {
-        connectAccountCompleted: true,
-      });
-    }
-
-    return {
-      connected: true,
-      accountId: account.id,
-      chargesEnabled: account.charges_enabled,
-      payoutsEnabled: account.payouts_enabled,
-      detailsSubmitted: account.details_submitted,
-    };
   }
 
   /**
@@ -143,6 +179,21 @@ export class StripeConnectService {
 
       return account.id;
     } catch (error) {
+      if (error instanceof Stripe.errors.StripeError) {
+        // Check if it's an authentication error (expired/invalid key)
+        if (
+          error.type === 'StripeAuthenticationError' ||
+          error.message.includes('Expired API Key') ||
+          error.message.includes('Invalid API Key')
+        ) {
+          throw new ServiceUnavailableException(
+            'Stripe API key is expired or invalid. Please update STRIPE_SECRET_KEY in your environment variables.',
+          );
+        }
+        throw new ServiceUnavailableException(
+          `Unable to create Stripe Connect account: ${error.message}`,
+        );
+      }
       throw new ServiceUnavailableException('Unable to create Stripe Connect account');
     }
   }
