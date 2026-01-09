@@ -22,7 +22,7 @@ services:
       - key: REDIS_URL
         sync: false
         # Set this manually in Render dashboard after creating Upstash Redis:
-        # Format: redis://default:PASSWORD@HOST:6379
+        # Format: rediss://default:PASSWORD@HOST:6379 (avec 's' pour TLS)
         # Or use separate variables: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
       # JWT & Auth
       - key: JWT_SECRET

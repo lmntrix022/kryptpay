@@ -13,13 +13,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         const redisPort = configService.get<number>('REDIS_PORT', 6379);
         const redisPassword = configService.get<string>('REDIS_PASSWORD');
 
-        const options: { host: string; port: number; password?: string } = {
+        const options: { host: string; port: number; password?: string; tls?: {} } = {
           host: redisHost,
           port: redisPort,
         };
 
         if (redisPassword) {
           options.password = redisPassword;
+        }
+
+        // Support TLS pour Upstash Redis
+        if (redisHost.includes('upstash.io')) {
+          options.tls = {};
         }
 
         return {

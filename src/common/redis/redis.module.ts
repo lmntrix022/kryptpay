@@ -16,13 +16,22 @@ import { CacheService } from '../services/cache.service';
         const redisPassword = configService.get<string>('REDIS_PASSWORD');
 
         if (redisUrl) {
-          return new Redis(redisUrl);
+          // Support TLS pour Upstash Redis (rediss://)
+          return new Redis(redisUrl, {
+            tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+            retryStrategy: (times: number) => {
+              const delay = Math.min(times * 50, 2000);
+              return delay;
+            },
+            maxRetriesPerRequest: 3,
+          });
         }
 
         return new Redis({
           host: redisHost,
           port: redisPort,
           password: redisPassword,
+          tls: redisHost.includes('upstash.io') ? {} : undefined,
           retryStrategy: (times: number) => {
             const delay = Math.min(times * 50, 2000);
             return delay;
