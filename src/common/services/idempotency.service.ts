@@ -76,10 +76,28 @@ export class IdempotencyService {
       }
 
       const parsed = JSON.parse(cached);
-      return parsed.requestHash === requestHash;
+      if (parsed.requestHash === requestHash) {
+        return true; // Même hash, requête identique
+      }
+
+      // Hash différent : la clé a été utilisée avec un body différent
+      // Supprimer l'ancienne clé pour permettre la nouvelle requête
+      // (cela peut arriver si l'utilisateur modifie les paramètres et réessaie)
+      this.logger.warn(
+        `Idempotency key ${idempotencyKey} was used with different request body. ` +
+        `Removing old cache entry to allow new request.`
+      );
+      await this.redis.del(key);
+      return true; // Autoriser la nouvelle requête après suppression de l'ancienne
     } catch (error: any) {
       this.logger.error(`Failed to validate idempotency key: ${error.message}`, error.stack);
-      return false;
+      // En cas d'erreur, supprimer la clé pour éviter les blocages
+      try {
+        await this.redis.del(key);
+      } catch (delError) {
+        // Ignorer les erreurs de suppression
+      }
+      return true; // Autoriser la requête en cas d'erreur
     }
   }
 }
