@@ -16,11 +16,27 @@ const nextConfig = {
     // Ne pas arrêter le build sur les erreurs TypeScript (mais on les corrige quand même)
     ignoreBuildErrors: false,
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@boohpay/sdk': path.resolve(__dirname, '../../packages/boohpay-sdk/src'),
     };
+    
+    // Configurer webpack pour gérer les dépendances optionnelles Stripe dans le SDK
+    // Le SDK utilise try/catch pour gérer les dépendances manquantes
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@stripe/react-stripe-js': false,
+      '@stripe/stripe-js': false,
+    };
+    
+    // Ignorer les warnings pour les modules optionnels
+    config.ignoreWarnings = [
+      { module: /@boohpay\/sdk/ },
+      { message: /Can't resolve '@stripe\/react-stripe-js'/ },
+      { message: /Can't resolve '@stripe\/stripe-js'/ },
+    ];
+    
     return config;
   },
 };

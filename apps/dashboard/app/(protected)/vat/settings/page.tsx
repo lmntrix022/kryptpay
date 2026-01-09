@@ -72,6 +72,8 @@ export default function VatSettingsPage() {
         // En cas d'erreur, on peut quand même permettre l'activation mais afficher un avertissement
         setReversementValidation({
           canEnableAutoReversement: false,
+          availableProviders: [],
+          compatibleProviders: [],
           warnings: ['Impossible de valider la configuration. Veuillez vérifier votre connexion.'],
           suggestions: [],
         });
@@ -81,6 +83,8 @@ export default function VatSettingsPage() {
       // En cas d'erreur réseau, permettre quand même l'activation
       setReversementValidation({
         canEnableAutoReversement: false,
+        availableProviders: [],
+        compatibleProviders: [],
         warnings: ['Erreur lors de la validation. Veuillez réessayer.'],
         suggestions: [],
       });
