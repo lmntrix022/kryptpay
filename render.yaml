@@ -113,7 +113,7 @@ services:
     env: node
     plan: starter
     rootDir: apps/dashboard
-    buildCommand: NODE_ENV=production npm ci && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public
+    buildCommand: NODE_ENV=production npm install && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public
     startCommand: cd .next/standalone && node server.js
     healthCheckPath: /
     envVars:
