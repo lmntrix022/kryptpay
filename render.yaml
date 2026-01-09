@@ -113,8 +113,8 @@ services:
     env: node
     plan: starter
     rootDir: apps/dashboard
-    buildCommand: NODE_ENV= npm ci && npm run build
-    startCommand: node .next/standalone/server.js
+    buildCommand: NODE_ENV=production npm ci && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public
+    startCommand: cd .next/standalone && node server.js
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
@@ -122,12 +122,9 @@ services:
       - key: PORT
         value: 10000
       - key: NEXT_PUBLIC_API_BASE_URL
-        fromService:
-          type: web
-          name: kryptpay-api
-          property: host
-        # Will be: https://kryptpay-api.onrender.com/v1
-        # You may need to set this manually: https://kryptpay-api.onrender.com/v1
+        value: "https://kryptpay-api.onrender.com/v1"
+        # Note: fromService ne peut pas ajouter /v1, donc on définit manuellement
+        # Remplacez kryptpay-api par le nom réel de votre service API si différent
 
 databases:
   # PostgreSQL Database
