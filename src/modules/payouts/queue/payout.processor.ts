@@ -36,9 +36,26 @@ export class PayoutProcessor {
       await job.progress(10);
 
       // Récupérer le payout de la base
+      // Ne pas inclure merchants car webhook_secret n'existe pas encore dans Render
       const payout = await this.prisma.payouts.findUnique({
         where: { id: payoutId },
-        include: { merchants: true },
+        select: {
+          id: true,
+          merchant_id: true,
+          provider: true,
+          status: true,
+          payment_system: true,
+          payout_type: true,
+          amount_minor: true,
+          currency: true,
+          msisdn: true,
+          external_reference: true,
+          provider_reference: true,
+          metadata: true,
+          created_at: true,
+          updated_at: true,
+          is_test_mode: true,
+        },
       });
 
       if (!payout) {
