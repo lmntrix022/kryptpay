@@ -114,7 +114,7 @@ services:
     plan: starter
     rootDir: apps/dashboard
     buildCommand: NODE_ENV= npm ci && npm run build
-    startCommand: npm start
+    startCommand: node .next/standalone/server.js
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
