@@ -38,8 +38,14 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
       this.logger.warn('STRIPE_SECRET_KEY is not configured, provider will be disabled');
     }
 
+    // OPTIMISATION: Configurer Stripe avec timeout et keep-alive pour réduire la latence
     this.stripe = new Stripe(this.secretKey || 'sk_test_mock', {
       apiVersion: '2023-08-16',
+      timeout: 30000, // 30 secondes max pour chaque requête Stripe
+      maxNetworkRetries: 2, // Réduire les retries pour éviter les attentes longues
+      httpClient: Stripe.createNodeHttpClient({
+        agent: undefined, // Utiliser l'agent HTTP par défaut de Node.js
+      }),
     });
   }
 
@@ -74,9 +80,12 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
       !merchantCredentials?.secretKey && merchantCredentials?.connectAccountId,
     );
 
+    // OPTIMISATION: Utiliser la même configuration optimisée pour les clients marchands
     const stripeClient = merchantCredentials?.secretKey
       ? new Stripe(effectiveSecret, {
           apiVersion: '2023-08-16',
+          timeout: 30000, // 30 secondes max
+          maxNetworkRetries: 2, // Réduire les retries
         })
       : this.stripe;
 
