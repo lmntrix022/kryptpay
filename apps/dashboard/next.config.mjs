@@ -24,8 +24,8 @@ const nextConfig = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, '.'),
       '@boohpay/sdk': path.resolve(__dirname, '../../packages/boohpay-sdk/src'),
-      // Configurer webpack pour gérer les dépendances optionnelles Stripe dans le SDK
-      // Le SDK utilise try/catch pour gérer les dépendances manquantes
+    // Configurer webpack pour gérer les dépendances optionnelles Stripe dans le SDK
+    // Le SDK utilise try/catch pour gérer les dépendances manquantes
       '@stripe/react-stripe-js': false,
       '@stripe/stripe-js': false,
     };
