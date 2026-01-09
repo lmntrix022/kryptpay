@@ -1,11 +1,11 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useMemo, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Key, Eye, EyeOff, ArrowLeft, CheckCircle, AlertCircle, Loader2, ShieldCheck } from 'lucide-react';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialToken = useMemo(() => searchParams?.get('token') ?? '', [searchParams]);
@@ -249,5 +249,27 @@ export default function ResetPasswordPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="text-center">
+          <div className="mx-auto w-14 h-14 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-6">
+            <ShieldCheck className="w-7 h-7 text-violet-400" />
+          </div>
+          <h1 className="text-2xl font-semibold text-white mb-2 tracking-tight">
+            Nouveau mot de passe
+          </h1>
+          <p className="text-zinc-400 text-sm">
+            Chargement...
+          </p>
+        </div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
