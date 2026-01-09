@@ -33,9 +33,30 @@ export class ApiKeyGuard implements CanActivate {
 
     const keyHash = createHash('sha256').update(apiKey).digest('hex');
 
+    // Utiliser select au lieu de include pour éviter les colonnes qui n'existent pas encore
     const record = await this.prisma.api_keys.findUnique({
       where: { key_hash: keyHash },
-      include: { merchants: true },
+      select: {
+        id: true,
+        label: true,
+        key_hash: true,
+        merchant_id: true,
+        created_at: true,
+        last_used_at: true,
+        revoked_at: true,
+        status: true,
+        merchants: {
+          select: {
+            id: true,
+            name: true,
+            created_at: true,
+            updated_at: true,
+            app_commission_rate: true,
+            app_commission_fixed: true,
+            // Ne pas inclure webhook_secret et webhook_url car ils n'existent pas encore dans Render
+          },
+        },
+      },
     });
 
     if (!record) {
