@@ -530,7 +530,7 @@ export class ReconciliationService {
           updated_at: true,
           app_commission_rate: true,
           app_commission_fixed: true,
-          users: { take: 1, select: { id: true, email: true, name: true } },
+          users: { take: 1, select: { id: true, email: true } },
         },
       });
 
