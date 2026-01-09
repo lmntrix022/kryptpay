@@ -67,9 +67,33 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
 
     this.logger.debug(`Creating Stripe payment intent for order ${dto.orderId}`);
 
-    const useConnectAccount = Boolean(
+    // Vérifier si on peut utiliser le compte Connect
+    let useConnectAccount = Boolean(
       !merchantCredentials?.secretKey && merchantCredentials?.connectAccountId,
     );
+
+    // Si on utilise un compte Connect, vérifier qu'il peut effectuer des charges
+    if (useConnectAccount && merchantCredentials?.connectAccountId) {
+      try {
+        const account = await this.stripe.accounts.retrieve(merchantCredentials.connectAccountId);
+        if (!account.charges_enabled) {
+          this.logger.warn(
+            `Stripe Connect account ${merchantCredentials.connectAccountId} cannot make charges. ` +
+            `charges_enabled: ${account.charges_enabled}, details_submitted: ${account.details_submitted}. ` +
+            `Falling back to platform account.`
+          );
+          // Ne pas utiliser le compte Connect si charges_enabled est false
+          useConnectAccount = false;
+        }
+      } catch (error) {
+        this.logger.warn(
+          `Failed to verify Stripe Connect account status: ${error instanceof Error ? error.message : 'Unknown error'}. ` +
+          `Falling back to platform account.`
+        );
+        // En cas d'erreur, ne pas utiliser le compte Connect
+        useConnectAccount = false;
+      }
+    }
 
     const stripeClient = merchantCredentials?.secretKey
       ? new Stripe(effectiveSecret, {
