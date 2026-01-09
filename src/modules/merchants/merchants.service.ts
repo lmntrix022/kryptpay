@@ -42,8 +42,15 @@ export class MerchantsService {
   }
 
   async listMerchants() {
+    // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
     const merchants = await this.prisma.merchants.findMany({
-      include: {
+      select: {
+        id: true,
+        name: true,
+        created_at: true,
+        updated_at: true,
+        app_commission_rate: true,
+        app_commission_fixed: true,
         _count: {
           select: {
             transactions: true,

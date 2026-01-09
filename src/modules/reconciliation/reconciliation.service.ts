@@ -520,9 +520,18 @@ export class ReconciliationService {
   ): Promise<void> {
     try {
       // Récupérer les infos du merchant
+      // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
       const merchant = await this.prisma.merchants.findUnique({
         where: { id: merchant_id },
-        include: { users: { take: 1 } },
+        select: {
+          id: true,
+          name: true,
+          created_at: true,
+          updated_at: true,
+          app_commission_rate: true,
+          app_commission_fixed: true,
+          users: { take: 1, select: { id: true, email: true, name: true } },
+        },
       });
 
       if (!merchant) return;

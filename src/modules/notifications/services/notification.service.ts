@@ -110,9 +110,17 @@ export class NotificationService {
     // Récupérer l'email du marchand si non fourni
     let merchantEmail = data.merchantEmail;
     if (!merchantEmail && data.merchantId) {
+      // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
       const merchant = await this.prisma.merchants.findUnique({
         where: { id: data.merchantId },
-        include: { users: { where: { role: 'MERCHANT' }, take: 1 } },
+        select: {
+          id: true,
+          users: {
+            where: { role: 'MERCHANT' },
+            take: 1,
+            select: { id: true, email: true },
+          },
+        },
       });
       merchantEmail = merchant?.users[0]?.email;
     }
@@ -206,9 +214,17 @@ export class NotificationService {
     // Récupérer l'email du marchand
     let merchantEmail = data.merchantEmail;
     if (!merchantEmail && data.merchantId) {
+      // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
       const merchant = await this.prisma.merchants.findUnique({
         where: { id: data.merchantId },
-        include: { users: { where: { role: 'MERCHANT' }, take: 1 } },
+        select: {
+          id: true,
+          users: {
+            where: { role: 'MERCHANT' },
+            take: 1,
+            select: { id: true, email: true },
+          },
+        },
       });
       merchantEmail = merchant?.users[0]?.email;
     }
@@ -307,10 +323,16 @@ export class NotificationService {
     }
 
     // Récupérer l'email du marchand
+    // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
     const merchant = await this.prisma.merchants.findUnique({
       where: { id: payment.merchant_id },
-      include: {
-        users: { where: { role: 'MERCHANT' }, take: 1 },
+      select: {
+        id: true,
+        users: {
+          where: { role: 'MERCHANT' },
+          take: 1,
+          select: { id: true, email: true },
+        },
       },
     });
 
@@ -445,9 +467,17 @@ export class NotificationService {
     // Récupérer l'email du marchand si nécessaire
     let recipientEmail = data.merchantEmail;
     if (!recipientEmail && data.merchantId) {
+      // Utiliser select pour éviter webhook_secret qui n'existe pas encore dans Render
       const merchant = await this.prisma.merchants.findUnique({
         where: { id: data.merchantId },
-        include: { users: { where: { role: 'MERCHANT' }, take: 1 } },
+        select: {
+          id: true,
+          users: {
+            where: { role: 'MERCHANT' },
+            take: 1,
+            select: { id: true, email: true },
+          },
+        },
       });
       recipientEmail = merchant?.users[0]?.email;
     }
