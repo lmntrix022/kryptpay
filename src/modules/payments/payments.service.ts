@@ -124,7 +124,10 @@ export class PaymentsService {
     const eventId = randomUUID();
     
     const now = new Date();
-    const payment = await this.prisma.transactions.create({
+    
+    // OPTIMISATION: Créer la transaction et appeler le provider en parallèle
+    // On crée d'abord la transaction sans les events pour être plus rapide
+    const paymentPromise = this.prisma.transactions.create({
       data: {
         id: paymentId,
         merchant_id: merchant_id,
@@ -141,27 +144,31 @@ export class PaymentsService {
         metadata: dto.metadata ? (dto.metadata as Prisma.InputJsonValue) : undefined,
         is_test_mode: (metadata?.isTestMode as boolean) === true,
         updatedAt: now,
-        transaction_events: {
-          create: {
-            id: eventId,
-            type: 'PAYMENT_INITIATED',
-            payload: {
-              gateway,
-              amount: dto.amount,
-              boohpayFee,
-              appCommission,
-            } satisfies Prisma.JsonObject,
-          },
-        },
-      },
-      include: {
-        transaction_events: {
-          orderBy: {
-            occurredAt: 'asc',
-          },
-        },
       },
     });
+
+    // Créer l'event en arrière-plan (non-bloquant)
+    const eventPromise = paymentPromise.then(() =>
+      this.prisma.transaction_events.create({
+        data: {
+          id: eventId,
+          paymentId: paymentId,
+          type: 'PAYMENT_INITIATED',
+          payload: {
+            gateway,
+            amount: dto.amount,
+            boohpayFee,
+            appCommission,
+          } satisfies Prisma.JsonObject,
+          occurredAt: now,
+        },
+      }).catch((error) => {
+        this.logger.warn(`Failed to create payment event: ${error.message}`);
+      })
+    );
+
+    // Ne pas attendre l'event pour continuer
+    const payment = await paymentPromise;
 
     const provider = this.getProvider(gateway);
 
@@ -177,7 +184,9 @@ export class PaymentsService {
         ...(providerResult.metadata ?? {}),
       };
 
-      const updated = await this.prisma.transactions.update({
+      // OPTIMISATION: Mettre à jour sans récupérer les events pour être plus rapide
+      // Les events seront récupérés plus tard si nécessaire
+      await this.prisma.transactions.update({
         where: { id: payment.id },
         data: {
           providerReference: providerResult.providerReference,
@@ -188,16 +197,20 @@ export class PaymentsService {
               ? (metadataPayload as Prisma.InputJsonValue)
               : undefined,
         },
-        include: {
-          transaction_events: {
-            orderBy: {
-              occurredAt: 'asc',
-            },
-          },
-        },
-        });
+      });
 
-        const serialized = this.serialize(updated);
+      // Construire la réponse sans refaire une requête DB
+      // OPTIMISATION: Ne pas récupérer les events pour être plus rapide
+      const updated = {
+        ...payment,
+        providerReference: providerResult.providerReference,
+        status: providerResult.status,
+        checkoutPayload: providerResult.checkoutPayload,
+        metadata: metadataPayload,
+        transaction_events: [], // Events seront récupérés plus tard si nécessaire
+      };
+
+        const serialized = this.serialize(updated as any);
 
         // Enregistrer les métriques
         if (this.metricsService) {
