@@ -19,15 +19,26 @@ export class BoohPayAPIError extends Error {
 }
 
 /**
- * Génère une clé d'idempotency unique basée sur orderId + timestamp
+ * Génère une clé d'idempotency unique basée sur orderId + hash du body
+ * Cela garantit qu'une même clé ne sera jamais utilisée avec un body différent
  */
-function generateIdempotencyKey(orderId: string): string {
-  // Utiliser crypto.randomUUID si disponible, sinon fallback sur timestamp + random
+function generateIdempotencyKey(orderId: string, requestBody: Record<string, unknown>): string {
+  // Créer un hash simple du body pour garantir l'unicité
+  const bodyString = JSON.stringify(requestBody);
+  let hash = 0;
+  for (let i = 0; i < bodyString.length; i++) {
+    const char = bodyString.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  const bodyHash = Math.abs(hash).toString(36);
+  
+  // Utiliser crypto.randomUUID si disponible pour une partie vraiment unique
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return `${orderId}-${crypto.randomUUID()}`;
+    return `${orderId}-${bodyHash}-${crypto.randomUUID()}`;
   }
   // Fallback pour les environnements sans crypto.randomUUID
-  return `${orderId}-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  return `${orderId}-${bodyHash}-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
 }
 
 export async function createPayment(
@@ -43,8 +54,21 @@ export async function createPayment(
       ? 'CARD' 
       : options.paymentMethod || 'MOBILE_MONEY';
 
-  // Générer une clé d'idempotency unique
-  const idempotencyKey = generateIdempotencyKey(options.orderId);
+  // Préparer le body de la requête
+  const requestBody = {
+    orderId: options.orderId,
+    amount: options.amount,
+    currency: options.currency.toUpperCase(),
+    countryCode: options.countryCode.toUpperCase(),
+    paymentMethod: backendPaymentMethod,
+    customer: options.customer,
+    metadata: options.metadata,
+    returnUrl: options.returnUrl,
+  };
+
+  // Générer une clé d'idempotency unique basée sur orderId + hash du body
+  // Cela garantit qu'une même clé ne sera jamais utilisée avec un body différent
+  const idempotencyKey = generateIdempotencyKey(options.orderId, requestBody);
 
   try {
     const response = await fetch(url, {
@@ -54,16 +78,7 @@ export async function createPayment(
         'x-api-key': apiKey,
         'Idempotency-Key': idempotencyKey,
       },
-      body: JSON.stringify({
-        orderId: options.orderId,
-        amount: options.amount,
-        currency: options.currency.toUpperCase(),
-        countryCode: options.countryCode.toUpperCase(),
-        paymentMethod: backendPaymentMethod,
-        customer: options.customer,
-        metadata: options.metadata,
-        returnUrl: options.returnUrl,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     let data: any;
