@@ -106,6 +106,8 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
     }
 
     try {
+      const stripeStart = Date.now();
+      this.logger.log(`[PERF] Creating Stripe PaymentIntent for ${dto.orderId}`);
       const intent = await this.retryService.withRetry(
         () =>
           stripeClient.paymentIntents.create(
@@ -145,6 +147,7 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
           retryableStatusCodes: [429, 500, 502, 503, 504],
         },
       );
+      this.logger.log(`[PERF] Stripe PaymentIntent created in ${Date.now() - stripeStart}ms`);
 
       const checkoutPayload: Record<string, unknown> = {
         type: 'CLIENT_SECRET',

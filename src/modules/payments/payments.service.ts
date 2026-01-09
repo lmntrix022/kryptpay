@@ -88,14 +88,19 @@ export class PaymentsService {
   }
 
   async createPayment(dto: CreatePaymentDto, merchant_id: string): Promise<PaymentResponseDto> {
+    const startTime = Date.now();
+    this.logger.log(`[PERF] Payment creation started for order ${dto.orderId}`);
+    
     const gateway = this.gatewaySelector.selectGateway(dto.countryCode, dto.paymentMethod);
     const amountMinor = Math.trunc(dto.amount);
 
     // Récupérer les paramètres de commission du marchand
+    const merchantStart = Date.now();
     const merchant = await this.prisma.merchants.findUnique({
       where: { id: merchant_id },
       select: { app_commission_rate: true, app_commission_fixed: true },
     });
+    this.logger.log(`[PERF] Merchant query took ${Date.now() - merchantStart}ms`);
 
     // L'app peut surcharger la commission via les metadata
     const metadata = dto.metadata as Record<string, unknown> | undefined;
@@ -173,11 +178,14 @@ export class PaymentsService {
     const provider = this.getProvider(gateway);
 
     try {
+      const providerStart = Date.now();
+      this.logger.log(`[PERF] Calling provider.createPayment for ${gateway}`);
       const providerResult = await provider.createPayment({
         dto,
         paymentId: payment.id,
         merchant_id: merchant_id,
       });
+      this.logger.log(`[PERF] Provider.createPayment took ${Date.now() - providerStart}ms`);
 
       const metadataPayload: Record<string, unknown> = {
         ...(dto.metadata ?? {}),
@@ -246,6 +254,8 @@ export class PaymentsService {
           await this.cacheService.deletePattern(`analytics:combined:*`);
         }
 
+        const totalTime = Date.now() - startTime;
+        this.logger.log(`[PERF] Total payment creation took ${totalTime}ms for order ${dto.orderId}`);
         return serialized;
       } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
