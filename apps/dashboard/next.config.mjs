@@ -19,8 +19,10 @@ const nextConfig = {
   },
   transpilePackages: ['@boohpay/sdk'],
   webpack: (config, { isServer }) => {
+    // Préserver l'alias @/ pour les composants UI
     config.resolve.alias = {
       ...config.resolve.alias,
+      '@': path.resolve(__dirname, '.'),
       '@boohpay/sdk': path.resolve(__dirname, '../../packages/boohpay-sdk/src'),
     };
     
