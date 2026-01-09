@@ -3,9 +3,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,
-    "noEmit": false
+    "noEmit": false,
+    "types": ["node"]
   },
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "src/**/__mocks__/**/*"]
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "src/**/__mocks__/**/*", "**/*.test.ts", "**/*.spec.ts"]
 }
 
 
