@@ -14,8 +14,14 @@ ALTER TABLE "transactions" ADD COLUMN IF NOT EXISTS "app_commission" INTEGER DEF
 
 -- Mettre à jour les transactions existantes:
 -- On considère que l'ancien platform_fee était tout pour BoohPay (avant l'ajout des commissions app)
-UPDATE "transactions" 
-SET "boohpay_fee" = "platform_fee", 
-    "app_commission" = 0 
-WHERE "boohpay_fee" = 0;
+-- Vérifier que platform_fee existe avant de l'utiliser
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='transactions' AND column_name='platform_fee') THEN
+    UPDATE "transactions" 
+    SET "boohpay_fee" = "platform_fee", 
+        "app_commission" = 0 
+    WHERE "boohpay_fee" = 0 AND "platform_fee" IS NOT NULL;
+  END IF;
+END $$;
 

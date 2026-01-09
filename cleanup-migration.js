@@ -41,10 +41,14 @@ async function cleanup() {
     `);
     console.log(`   Trouvé ${migrations.rows.length} migration(s)\n`);
     
-    // 2. Chercher la migration en échec
-    const failedMigration = migrations.rows.find(
-      m => m.migration_name === '20251129200000_add_vat_tables'
+    // 2. Chercher les migrations en échec
+    const failedMigrations = migrations.rows.filter(
+      m => m.migration_name === '20251129200000_add_vat_tables' || 
+           m.migration_name === '20251129_add_commission_fields' ||
+           m.migration_name === '20251129_add_platform_fee'
     );
+    
+    const failedMigration = failedMigrations[0];
     
     if (failedMigration) {
       console.log('⚠️  Migration en échec trouvée:', failedMigration.migration_name);
@@ -69,6 +73,24 @@ async function cleanup() {
       // 4. Demander confirmation (ou exécuter directement en mode non-interactif)
       console.log('\n🧹 Nettoyage en cours...');
       
+      // Vérifier et supprimer les colonnes commission si elles existent
+      const commissionCols = await client.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'transactions' 
+        AND column_name IN ('boohpay_fee', 'app_commission');
+      `);
+      
+      if (commissionCols.rows.length > 0) {
+        await client.query(`
+          ALTER TABLE "transactions" DROP COLUMN IF EXISTS "boohpay_fee";
+          ALTER TABLE "transactions" DROP COLUMN IF EXISTS "app_commission";
+          ALTER TABLE "merchants" DROP COLUMN IF EXISTS "app_commission_rate";
+          ALTER TABLE "merchants" DROP COLUMN IF EXISTS "app_commission_fixed";
+        `);
+        console.log('   ✅ Colonnes commission supprimées');
+      }
+      
       // Supprimer les tables VAT si elles existent
       if (tables.rows.length > 0) {
         await client.query(`
@@ -90,10 +112,14 @@ async function cleanup() {
       `);
       console.log('   ✅ Types enum supprimés');
       
-      // Supprimer la migration en échec
+      // Supprimer les migrations en échec
       const result = await client.query(`
         DELETE FROM "_prisma_migrations" 
-        WHERE migration_name = '20251129200000_add_vat_tables'
+        WHERE migration_name IN (
+          '20251129200000_add_vat_tables',
+          '20251129_add_commission_fields',
+          '20251129_add_platform_fee'
+        )
         RETURNING migration_name;
       `);
       
@@ -110,7 +136,11 @@ async function cleanup() {
     console.log('✅ Vérification finale...');
     const remaining = await client.query(`
       SELECT migration_name FROM "_prisma_migrations" 
-      WHERE migration_name = '20251129200000_add_vat_tables';
+      WHERE migration_name IN (
+        '20251129200000_add_vat_tables',
+        '20251129_add_commission_fields',
+        '20251129_add_platform_fee'
+      );
     `);
     
     if (remaining.rows.length === 0) {
