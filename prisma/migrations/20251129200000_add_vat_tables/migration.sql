@@ -163,7 +163,7 @@ CREATE INDEX IF NOT EXISTS "vat_audit_logs_action_created_at_idx" ON "vat_audit_
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'vat_transactions_payment_id_fkey') THEN
-    ALTER TABLE "vat_transactions" ADD CONSTRAINT "vat_transactions_payment_id_fkey" FOREIGN KEY ("payment_id") REFERENCES "payments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    ALTER TABLE "vat_transactions" ADD CONSTRAINT "vat_transactions_payment_id_fkey" FOREIGN KEY ("payment_id") REFERENCES "transactions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'vat_transactions_merchant_id_fkey') THEN
     ALTER TABLE "vat_transactions" ADD CONSTRAINT "vat_transactions_merchant_id_fkey" FOREIGN KEY ("merchant_id") REFERENCES "merchants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
