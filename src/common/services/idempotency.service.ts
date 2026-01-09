@@ -33,7 +33,8 @@ export class IdempotencyService {
       const parsed = JSON.parse(cached);
       return parsed.response;
     } catch (error: any) {
-      this.logger.error(`Failed to check idempotency key: ${error.message}`, error.stack);
+      // Si Redis n'est pas disponible, on retourne null pour permettre le traitement
+      this.logger.warn(`Failed to check idempotency key (Redis may be unavailable): ${error.message}`);
       return null;
     }
   }
@@ -56,8 +57,14 @@ export class IdempotencyService {
     try {
       await this.redis.setex(key, this.TTL, JSON.stringify(data));
     } catch (error: any) {
-      this.logger.error(`Failed to store idempotency key: ${error.message}`, error.stack);
-      throw new BadRequestException('Failed to store idempotency key');
+      // Si Redis n'est pas disponible, on log l'erreur mais on ne bloque pas la requête
+      // L'idempotence sera simplement désactivée pour cette requête
+      this.logger.warn(
+        `Failed to store idempotency key (Redis may be unavailable): ${error.message}. ` +
+        `Payment will proceed without idempotency caching.`
+      );
+      // Ne pas throw d'erreur - permettre au paiement de continuer
+      // L'idempotence est une fonctionnalité de qualité, pas un blocage critique
     }
   }
 
@@ -87,17 +94,16 @@ export class IdempotencyService {
         `Idempotency key ${idempotencyKey} was used with different request body. ` +
         `Removing old cache entry to allow new request.`
       );
-      await this.redis.del(key);
-      return true; // Autoriser la nouvelle requête après suppression de l'ancienne
-    } catch (error: any) {
-      this.logger.error(`Failed to validate idempotency key: ${error.message}`, error.stack);
-      // En cas d'erreur, supprimer la clé pour éviter les blocages
       try {
         await this.redis.del(key);
       } catch (delError) {
         // Ignorer les erreurs de suppression
       }
-      return true; // Autoriser la requête en cas d'erreur
+      return true; // Autoriser la nouvelle requête après suppression de l'ancienne
+    } catch (error: any) {
+      // Si Redis n'est pas disponible, on autorise la requête
+      this.logger.warn(`Failed to validate idempotency key (Redis may be unavailable): ${error.message}`);
+      return true; // Autoriser la requête en cas d'erreur (Redis non disponible)
     }
   }
 }
