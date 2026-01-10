@@ -43,9 +43,7 @@ export class StripeProviderService implements PaymentProvider, RefundProvider {
       apiVersion: '2023-08-16',
       timeout: 30000, // 30 secondes max pour chaque requête Stripe
       maxNetworkRetries: 2, // Réduire les retries pour éviter les attentes longues
-      httpClient: Stripe.createNodeHttpClient({
-        agent: undefined, // Utiliser l'agent HTTP par défaut de Node.js
-      }),
+      // Utiliser l'agent HTTP par défaut de Node.js (pas besoin de le spécifier)
     });
   }
 
