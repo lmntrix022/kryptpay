@@ -135,7 +135,7 @@ export default function TransactionsTable({ items }: TransactionsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/30 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-300">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-100 dark:bg-violet-900/30 px-2.5 py-1 text-xs font-medium text-violet-700 dark:text-violet-300">
                       {gatewayLabel(item.gatewayUsed)}
                     </span>
                   </TableCell>
@@ -159,7 +159,7 @@ export default function TransactionsTable({ items }: TransactionsTableProps) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 hover:bg-cyan-100 dark:hover:bg-cyan-900/30"
+                        className="h-8 w-8 p-0 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                         title="Détails"
                       >
                         <Eye className="h-4 w-4" />
@@ -242,7 +242,7 @@ export default function TransactionsTable({ items }: TransactionsTableProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-9 px-3 hover:bg-cyan-100 dark:hover:bg-cyan-900/30"
+                    className="h-9 px-3 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                   >
                     <Eye className="h-4 w-4 mr-1.5" />
                     <span className="text-xs">Détails</span>

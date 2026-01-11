@@ -85,7 +85,7 @@ export default function LoginPage() {
           </label>
           <div className="relative group">
             {/* Glow effect */}
-            <div className={`absolute -inset-0.5 bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-xl blur opacity-0 transition-opacity duration-300 ${focusedField === 'email' ? 'opacity-30' : 'group-hover:opacity-20'}`} />
+            <div className={`absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-violet-500 rounded-xl blur opacity-0 transition-opacity duration-300 ${focusedField === 'email' ? 'opacity-30' : 'group-hover:opacity-20'}`} />
             
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
@@ -103,7 +103,7 @@ export default function LoginPage() {
                 placeholder="email@exemple.com"
                 disabled={loading}
                 autoComplete="email"
-                className="w-full h-14 pl-12 pr-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.05] transition-all duration-300"
+                className="w-full h-14 pl-12 pr-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.05] transition-all duration-300"
               />
             </div>
           </div>
@@ -117,14 +117,14 @@ export default function LoginPage() {
             </label>
             <Link
               href="/password/request"
-              className="text-xs font-medium text-cyan-400 hover:text-cyan-300 transition-colors"
+              className="text-xs font-medium text-violet-400 hover:text-violet-300 transition-colors"
             >
               Mot de passe oublié ?
             </Link>
           </div>
           <div className="relative group">
             {/* Glow effect */}
-            <div className={`absolute -inset-0.5 bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-xl blur opacity-0 transition-opacity duration-300 ${focusedField === 'password' ? 'opacity-30' : 'group-hover:opacity-20'}`} />
+            <div className={`absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-violet-500 rounded-xl blur opacity-0 transition-opacity duration-300 ${focusedField === 'password' ? 'opacity-30' : 'group-hover:opacity-20'}`} />
             
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
@@ -172,7 +172,7 @@ export default function LoginPage() {
           className="relative w-full h-14 mt-2 group overflow-hidden rounded-xl font-medium text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {/* Button gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-cyan-500 to-cyan-600 bg-[length:200%_100%] group-hover:animate-gradient-x transition-all duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-violet-500 to-violet-600 bg-[length:200%_100%] group-hover:animate-gradient-x transition-all duration-300" />
           
           {/* Shine effect */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -203,7 +203,7 @@ export default function LoginPage() {
         </div>
         <div className="relative flex justify-center">
           <span className="px-4 text-xs text-zinc-500 bg-transparent">
-            Première fois sur KryptPay ?
+            Première fois sur BoohPay ?
           </span>
         </div>
       </div>

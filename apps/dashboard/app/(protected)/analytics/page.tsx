@@ -173,7 +173,7 @@ export default function AnalyticsPage() {
       <PremiumCard hoverable={false}>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white">
               <Calendar className="w-5 h-5" />
             </div>
           <CardTitle>Filtres</CardTitle>
@@ -187,7 +187,7 @@ export default function AnalyticsPage() {
                 id="view"
                 value={view}
                 onChange={(e) => setView(e.target.value as any)}
-                className="flex h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="flex h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <option value="combined">Combiné</option>
                 <option value="payments">Paiements</option>
@@ -220,7 +220,7 @@ export default function AnalyticsPage() {
                 id="isTestMode"
                 value={filters.isTestMode}
                 onChange={(e) => setFilters({ ...filters, isTestMode: e.target.value })}
-                className="flex h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="flex h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 <option value="">Tous</option>
                 <option value="false">Production</option>
@@ -384,7 +384,7 @@ export default function AnalyticsPage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${percentage}%` }}
                             transition={{ duration: 0.5, delay: index * 0.05 }}
-                            className="h-full bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-lg"
+                            className="h-full bg-gradient-to-r from-violet-500 to-violet-600 rounded-lg"
                         />
                       </div>
                     </div>
@@ -411,7 +411,7 @@ export default function AnalyticsPage() {
           <PremiumCard hoverable={false}>
           <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white">
                   <Wallet className="w-5 h-5" />
                 </div>
                 <CardTitle className="text-lg font-bold">Analytics des versements</CardTitle>

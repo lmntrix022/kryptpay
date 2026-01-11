@@ -28,11 +28,11 @@ export function PremiumHeader({
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="relative overflow-hidden rounded-[32px]"
     >
-      {/* Background with mesh gradient - Cyan theme */}
+      {/* Background with mesh gradient - Violet theme */}
       <div className="absolute inset-0 bg-[#0a0a0a]">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/20 via-transparent to-cyan-600/20" />
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#08c2db]/30 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-transparent to-violet-600/20" />
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#8b5cf6]/30 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-violet-500/20 rounded-full blur-[100px]" />
         
         {/* Subtle grid */}
         <div 
@@ -55,7 +55,7 @@ export function PremiumHeader({
                 transition={{ delay: 0.2 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-6"
               >
-                {badge.icon && <badge.icon className="w-3.5 h-3.5 text-cyan-400" />}
+                {badge.icon && <badge.icon className="w-3.5 h-3.5 text-violet-400" />}
                 <span className="text-xs font-semibold text-white/70 tracking-wide uppercase">
                   {badge.text}
                 </span>
@@ -70,8 +70,8 @@ export function PremiumHeader({
             >
               {Icon && (
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl blur-xl opacity-50" />
-                  <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-violet-600 rounded-2xl blur-xl opacity-50" />
+                  <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
                     <Icon className="w-7 h-7 text-white" />
                   </div>
                 </div>
@@ -79,7 +79,7 @@ export function PremiumHeader({
               <span>
                 {title.split(' ').map((word, i, arr) => 
                   i === arr.length - 1 ? (
-                    <span key={i} className="block bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-400 bg-clip-text text-transparent">
+                    <span key={i} className="block bg-gradient-to-r from-violet-400 via-violet-500 to-violet-400 bg-clip-text text-transparent">
                       {word}
                     </span>
                   ) : (
@@ -111,7 +111,7 @@ export function PremiumHeader({
             >
               {stats.map((stat, index) => (
                 <div key={index} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-violet-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
                   <div className="relative px-8 py-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
                     <div className="text-5xl font-bold bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
                       {stat.value}

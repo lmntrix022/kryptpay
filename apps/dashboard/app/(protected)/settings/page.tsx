@@ -275,7 +275,7 @@ export default function SettingsPage() {
           <PremiumCard hoverable={false}>
           <CardHeader>
             <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white">
                   <DollarSign className="w-5 h-5" />
               </div>
               <div>
@@ -372,7 +372,7 @@ export default function SettingsPage() {
           <PremiumCard hoverable={false}>
           <CardHeader>
             <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white">
                   <Bell className="w-5 h-5" />
               </div>
               <div>
@@ -468,7 +468,7 @@ export default function SettingsPage() {
                     <Button 
                       onClick={handleSaveNotifications} 
                       disabled={savingNotif}
-                      className="rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-violet-600 hover:to-purple-700"
+                      className="rounded-xl bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-purple-700"
                     >
                     <Save className="w-4 h-4 mr-2" />
                       {savingNotif ? 'Sauvegarde...' : 'Enregistrer'}
@@ -491,7 +491,7 @@ export default function SettingsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white">
                     <Filter className="w-5 h-5" />
                 </div>
                 <div>
@@ -527,8 +527,8 @@ export default function SettingsPage() {
                 <PremiumLoader message="Chargement des filtres..." />
             ) : savedFilters.length === 0 ? (
               <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-cyan-600/10 flex items-center justify-center">
-                    <Filter className="w-8 h-8 text-[#08c2db]" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-500/10 to-violet-600/10 flex items-center justify-center">
+                    <Filter className="w-8 h-8 text-[#8b5cf6]" />
                   </div>
                   <p className="text-zinc-500 mb-4">Aucun filtre sauvegardé</p>
                   <Button 
@@ -621,7 +621,7 @@ export default function SettingsPage() {
                         id="filter-type"
                         value={filterForm.type}
                 onChange={(e) => setFilterForm({ ...filterForm, type: e.target.value })}
-                className="flex h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="flex h-10 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
                       >
                         <option value="payment">Paiements</option>
                         <option value="payout">Versements</option>

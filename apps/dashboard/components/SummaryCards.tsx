@@ -54,7 +54,7 @@ export default function SummaryCards({ totals }: SummaryCardsProps) {
       value: formattedTotal,
       description: `${numberFormatter.format(totals.transactions)} transaction${totals.transactions > 1 ? 's' : ''}`,
       icon: TrendingUp,
-      gradient: 'from-blue-500 to-cyan-500',
+      gradient: 'from-blue-500 to-violet-500',
       borderColor: 'border-blue-500/20',
       bgColor: 'bg-blue-50 dark:bg-blue-950/20',
       iconColor: 'text-blue-600 dark:text-blue-400',
@@ -64,10 +64,10 @@ export default function SummaryCards({ totals }: SummaryCardsProps) {
       value: numberFormatter.format(totals.transactions),
       description: 'Toutes transactions confondues',
       icon: CreditCard,
-      gradient: 'from-cyan-400 to-cyan-600',
-      borderColor: 'border-cyan-500/20',
-      bgColor: 'bg-cyan-50 dark:bg-cyan-950/20',
-      iconColor: 'text-cyan-600 dark:text-cyan-400',
+      gradient: 'from-violet-400 to-violet-600',
+      borderColor: 'border-violet-500/20',
+      bgColor: 'bg-violet-50 dark:bg-violet-950/20',
+      iconColor: 'text-violet-600 dark:text-violet-400',
     },
     {
       title: 'COMPLÉTÉES',
@@ -109,7 +109,7 @@ export default function SummaryCards({ totals }: SummaryCardsProps) {
           <Card
             key={card.title}
             className={cn(
-              'group relative overflow-hidden border-2 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1',
+              'group relative overflow-hidden border-2 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/10 hover:-translate-y-1',
               card.borderColor,
               card.bgColor
             )}

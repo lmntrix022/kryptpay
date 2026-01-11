@@ -234,7 +234,7 @@ export default function IntegrationsPage() {
           name: 'Stripe',
           description: 'Paiements par carte via Stripe Connect',
           logo: '/logo-stripe.png',
-          gradient: 'from-cyan-500 to-cyan-600',
+          gradient: 'from-violet-500 to-violet-600',
           status: {
             connected: stripeStatus.connected || false,
             hasCredentials: stripeStatus.connected || false,
@@ -246,7 +246,7 @@ export default function IntegrationsPage() {
           name: 'eBilling',
           description: 'Mobile Money (MTN, Orange, Moov)',
           logo: '/logo-ebilling.png',
-          gradient: 'from-cyan-500 to-cyan-600',
+          gradient: 'from-violet-500 to-violet-600',
           status: ebillingStatus as ProviderStatus,
         },
         {
@@ -254,7 +254,7 @@ export default function IntegrationsPage() {
           name: 'Moneroo',
           description: 'Paiements Mobile Money et cartes (multi-pays)',
           logo: '/logo-moneroo.png',
-          gradient: 'from-cyan-500 to-cyan-600',
+          gradient: 'from-violet-500 to-violet-600',
           status: monerooStatus as ProviderStatus,
         },
         {
@@ -262,7 +262,7 @@ export default function IntegrationsPage() {
           name: 'SHAP (eBilling Payouts)',
           description: 'Paiements sortants Mobile Money',
           logo: '/logo-shap.png',
-          gradient: 'from-cyan-500 to-cyan-600',
+          gradient: 'from-violet-500 to-violet-600',
           status: shapStatus as ProviderStatus,
         },
       ]);

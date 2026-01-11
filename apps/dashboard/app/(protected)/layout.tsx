@@ -56,10 +56,10 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
       <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
         <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
           <div className="relative w-16 h-16">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 animate-pulse" />
-            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-500 border-r-cyan-500/50 animate-spin" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500/20 to-violet-600/20 animate-pulse" />
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-violet-500 border-r-violet-500/50 animate-spin" />
             <div className="absolute inset-2 rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#08c2db]" />
+              <Sparkles className="w-5 h-5 text-[#8b5cf6]" />
             </div>
           </div>
           <p className="text-sm font-medium text-zinc-500">Chargement...</p>
@@ -127,12 +127,12 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         {/* Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-zinc-200 dark:border-zinc-800">
           <Link href={isAdmin ? '/admin' : '/merchant'} className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/25">
-              K
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center text-white font-bold shadow-lg shadow-violet-500/25">
+              B
           </div>
             {sidebarOpen && (
-              <span className="text-lg font-bold bg-gradient-to-r from-[#08c2db] to-cyan-600 bg-clip-text text-transparent animate-in fade-in slide-in-from-left-2 duration-300">
-                KryptPay
+              <span className="text-lg font-bold bg-gradient-to-r from-[#8b5cf6] to-violet-600 bg-clip-text text-transparent animate-in fade-in slide-in-from-left-2 duration-300">
+                BoohPay
               </span>
             )}
           </Link>
@@ -163,7 +163,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 className={cn(
                   'group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200',
                   isActive 
-                    ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/25' 
+                    ? 'bg-gradient-to-r from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/25' 
                     : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white'
                 )}
               >
@@ -190,7 +190,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             'flex items-center gap-3 mb-3',
             !sidebarOpen && 'justify-center'
           )}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-semibold text-sm border border-cyan-500/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/20 flex items-center justify-center text-violet-600 dark:text-violet-400 font-semibold text-sm border border-violet-500/20">
               {auth.user.email.charAt(0).toUpperCase()}
             </div>
             {sidebarOpen && (
@@ -230,10 +230,10 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             {/* Mobile Header */}
             <div className="h-16 flex items-center justify-between px-4 border-b border-zinc-200 dark:border-zinc-800">
               <Link href={isAdmin ? '/admin' : '/merchant'} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/25">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center text-white font-bold shadow-lg shadow-violet-500/25">
                   B
                 </div>
-                <span className="text-lg font-bold bg-gradient-to-r from-[#08c2db] to-cyan-600 bg-clip-text text-transparent">
+                <span className="text-lg font-bold bg-gradient-to-r from-[#8b5cf6] to-violet-600 bg-clip-text text-transparent">
                 KryptPay
                 </span>
               </Link>
@@ -258,7 +258,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                     className={cn(
                       'flex items-center gap-3 px-4 py-3 rounded-xl transition-all',
                       isActive 
-                        ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/25' 
+                        ? 'bg-gradient-to-r from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/25' 
                         : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                     )}
                   >
@@ -272,7 +272,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             {/* Mobile Footer */}
             <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 font-semibold border border-cyan-500/20">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/20 flex items-center justify-center text-violet-600 dark:text-violet-400 font-semibold border border-violet-500/20">
                   {auth.user.email.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -343,7 +343,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 {auth.user.role.toLowerCase()}
               </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white font-semibold shadow-lg shadow-cyan-500/25">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center text-white font-semibold shadow-lg shadow-violet-500/25">
               {auth.user.email.charAt(0).toUpperCase()}
             </div>
           </div>

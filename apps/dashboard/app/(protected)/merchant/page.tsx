@@ -301,7 +301,7 @@ export default function MerchantDashboardPage() {
               {isActive && (
                 <motion.div
                   layoutId="activeTabBg"
-                  className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-xl shadow-lg"
+                  className="absolute inset-0 bg-gradient-to-r from-violet-500 to-violet-600 rounded-xl shadow-lg"
                   transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 />
               )}
@@ -329,7 +329,7 @@ export default function MerchantDashboardPage() {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/25">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/25">
                       <CreditCard className="w-6 h-6" />
                     </div>
                     <div>
@@ -348,7 +348,7 @@ export default function MerchantDashboardPage() {
                       "h-11 px-6 rounded-xl font-semibold transition-all",
                       isConnected 
                         ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                        : "bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-lg shadow-cyan-500/25"
+                        : "bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-lg shadow-violet-500/25"
                     )}
                   >
                     {connectLoading ? (
@@ -563,7 +563,7 @@ export default function MerchantDashboardPage() {
                   <CardTitle>Filtres</CardTitle>
                   <Button 
                     onClick={() => setShowCreatePayoutForm(true)}
-                    className="h-10 px-5 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-violet-600 hover:to-purple-700 text-white font-semibold shadow-lg shadow-cyan-500/25"
+                    className="h-10 px-5 rounded-xl bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-purple-700 text-white font-semibold shadow-lg shadow-violet-500/25"
                   >
                     Créer un paiement
                   </Button>

@@ -43,7 +43,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               {/* Glow effect behind logo */}
               <div className="absolute inset-0 bg-violet-500/20 blur-2xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <Image
-                src="/KryptPayLogo.webp"
+                src="/BoohPay.png"
                 alt="BoohPay"
                 width={160}
                 height={48}

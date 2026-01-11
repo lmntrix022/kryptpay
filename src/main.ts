@@ -19,8 +19,8 @@ async function bootstrap(): Promise<void> {
 
   // Configuration Swagger/OpenAPI
   const config = new DocumentBuilder()
-    .setTitle('KryptPay API')
-    .setDescription('KryptPay - Hybrid Payment Orchestration API. Une API unique pour router et orchestrer des paiements entre Moneroo, Stripe, et eBilling.')
+    .setTitle('BoohPay API')
+    .setDescription('BoohPay - Hybrid Payment Orchestration API. Une API unique pour router et orchestrer des paiements entre Moneroo, Stripe, et eBilling.')
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -84,7 +84,7 @@ async function bootstrap(): Promise<void> {
   const port = process.env.PORT ? Number(process.env.PORT) : 3000;
   await app.listen(port);
   const logger = new Logger('Bootstrap');
-  logger.log(`KryptPay API listening on port ${port}`);
+  logger.log(`BoohPay API listening on port ${port}`);
 }
 
 void bootstrap();

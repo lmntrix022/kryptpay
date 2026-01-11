@@ -5,11 +5,11 @@ import { AuthProvider } from '../context/AuthContext';
 import { CurrencyProvider } from '../context/CurrencyContext';
 
 export const metadata: Metadata = {
-  title: 'KryptPay Dashboard',
-  description: 'Monitoring des transactions KryptPay (Stripe & Moneroo)',
+  title: 'BoohPay Dashboard',
+  description: 'Monitoring des transactions BoohPay (Stripe & Moneroo)',
   icons: {
     icon: [
-      { url: '/KryptPayLogo.webp', type: 'image/png' },
+      { url: '/BoohPay.png', type: 'image/png' },
       { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },

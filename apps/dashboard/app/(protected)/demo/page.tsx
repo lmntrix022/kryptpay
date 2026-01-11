@@ -265,7 +265,7 @@ export default function DemoPage() {
         {/* API Key Setup */}
         <PremiumCard>
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-lg shadow-cyan-500/25">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/25">
               <Key className="w-6 h-6" />
               </div>
               <div>
@@ -286,7 +286,7 @@ export default function DemoPage() {
                 disabled={loadingKeys}
                 className={cn(
                   'w-full rounded-xl',
-                  !useManualKey && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white'
+                  !useManualKey && 'bg-gradient-to-r from-violet-500 to-violet-600 text-white'
                 )}
               >
                 {loadingKeys ? (
@@ -307,7 +307,7 @@ export default function DemoPage() {
                 onClick={() => setUseManualKey(true)}
                 className={cn(
                   'w-full rounded-xl',
-                  useManualKey && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white'
+                  useManualKey && 'bg-gradient-to-r from-violet-500 to-violet-600 text-white'
                 )}
               >
                 <Edit3 className="w-4 h-4 mr-2" />
@@ -514,7 +514,7 @@ export default function DemoPage() {
                         onClick={() => setCheckoutMode('secure')}
                         className={cn(
                           'flex items-center gap-2 rounded-xl',
-                          checkoutMode === 'secure' && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white'
+                          checkoutMode === 'secure' && 'bg-gradient-to-r from-violet-500 to-violet-600 text-white'
                         )}
                       >
                         <Lock className="w-4 h-4" />
@@ -525,7 +525,7 @@ export default function DemoPage() {
                         onClick={() => setCheckoutMode('classic')}
                         className={cn(
                           'rounded-xl',
-                          checkoutMode === 'classic' && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white'
+                          checkoutMode === 'classic' && 'bg-gradient-to-r from-violet-500 to-violet-600 text-white'
                         )}
                       >
                         Classique
@@ -580,7 +580,7 @@ export default function DemoPage() {
                         onClick={() => setLocale(loc.code)}
                         className={cn(
                           'flex flex-col gap-1 h-auto py-2 rounded-xl',
-                          locale === loc.code && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white'
+                          locale === loc.code && 'bg-gradient-to-r from-violet-500 to-violet-600 text-white'
                         )}
                       >
                         <span className="text-xl">{loc.flag}</span>

@@ -360,7 +360,7 @@ export class ExportService {
   ${'trends' in analytics && analytics.trends && analytics.trends.length > 0 ? this.generateTrendsSection(analytics.trends, formatCurrency) : ''}
 
   <div style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #666; font-size: 12px; text-align: center;">
-    <p>Rapport généré par KryptPay Analytics - ${date}</p>
+    <p>Rapport généré par BoohPay Analytics - ${date}</p>
   </div>
 
   <script>
